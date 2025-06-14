@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import MoodRing from './MoodRing';
 import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
 
 interface ExpenseCardProps {
   category: ExpenseCategory;
