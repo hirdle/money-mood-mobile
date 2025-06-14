@@ -17,10 +17,10 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Calculator, Landmark, Wallet, TrendingUp, TrendingDown, CircleDollarSign, UsersRound, Car, Home } from "lucide-react";
 
 const budgetData = [
-  { month: "Май", income: 110000, expenses: 78000 },
-  { month: "Июнь", income: 120000, expenses: 85000 },
-  { month: "Июль", income: 125000, expenses: 92000 },
-]
+  { month: "Май", income: 115000, expenses: 94000 },
+  { month: "Июнь", income: 120000, expenses: 102000 },
+  { month: "Июль", income: 125000, expenses: 110850 }, // расходы складываются из всех категорий детальной таблицы
+];
 
 const chartConfig = {
   income: {
