@@ -267,44 +267,6 @@ const BudgetPage = () => {
         </CardContent>
       </Card>
 
-      {/* Подробная структура расходов */}
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <CircleDollarSign className="h-5 w-5 text-primary" />
-            <span>Подробная структура расходов</span>
-          </CardTitle>
-          <CardDescription>
-            Все ваши траты по категориям. Сумма: <span className="font-bold">{totalExpenses.toLocaleString()}₽</span>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Категория</TableHead>
-                <TableHead className="text-right">Сумма, ₽</TableHead>
-                <TableHead className="text-right">Доля (%)</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {categoriesWithPercent.map((cat) => (
-                <TableRow key={cat.label}>
-                  <TableCell>{cat.label}</TableCell>
-                  <TableCell className="text-right">{cat.amount.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{cat.percent}</TableCell>
-                </TableRow>
-              ))}
-              <TableRow>
-                <TableCell className="font-semibold">Итого</TableCell>
-                <TableCell className="text-right font-semibold">{totalExpenses.toLocaleString()}</TableCell>
-                <TableCell className="text-right font-semibold">100.0</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
       {/* Совместные покупки с друзьями */}
       <Card className="glass-card">
         <CardHeader>
@@ -346,7 +308,7 @@ const BudgetPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-           <Table>
+          <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Цель</TableHead>
