@@ -8,6 +8,7 @@ import NotificationsPage from './NotificationsPage';
 import SocialPage from './SocialPage';
 import BudgetPage from './BudgetPage';
 import { Toaster } from "@/components/ui/sonner";
+import ChatWindow from '@/components/ChatWindow';
 
 const tabs = [
   { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
@@ -19,6 +20,7 @@ const tabs = [
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [isChatOpen, setIsChatOpen] = useState(false);
   
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || HomePage;
 
@@ -46,7 +48,8 @@ const Index = () => {
       </div>
 
       {/* Чат-пузырь */}
-      <ChatBubble />
+      <ChatBubble onOpen={() => setIsChatOpen(true)} />
+      <ChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       <Toaster richColors position="top-center" />
     </div>
   );
