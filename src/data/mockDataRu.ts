@@ -111,34 +111,34 @@ export const mockNotifications: SmartNotification[] = [
 export const mockPeerComparisons: PeerComparison[] = [
   {
     category: 'Кофе',
-    userSpending: 8500,
-    peerAverage: 6200,
-    difference: 28,
+    userSpending: 1850,
+    peerAverage: 1270,
+    difference: 45,
     emoji: '☕',
-    suggestion: 'Попробуй готовить кофе дома 2-3 раза в неделю'
+    suggestion: 'Попробуй заваривать кофе дома 2-3 раза в неделю — заметишь экономию!'
   },
   {
     category: 'Доставка еды',
-    userSpending: 12400,
-    peerAverage: 15600,
-    difference: -18,
+    userSpending: 2400,
+    peerAverage: 3560,
+    difference: -33,
     emoji: '🍕',
-    suggestion: 'Отлично! Ты экономишь на доставке'
+    suggestion: 'Отлично! Ты тратил меньше на доставку, чем твои друзья.'
   },
   {
     category: 'Развлечения',
-    userSpending: 7800,
-    peerAverage: 9200,
-    difference: -15,
+    userSpending: 1800,
+    peerAverage: 2200,
+    difference: -18,
     emoji: '🎮',
     suggestion: 'Твои траты на развлечения под контролем!'
   },
   {
     category: 'Одежда',
-    userSpending: 18900,
-    peerAverage: 14200,
-    difference: 33,
+    userSpending: 3400,
+    peerAverage: 2100,
+    difference: 62,
     emoji: '👕',
-    suggestion: 'Можно сэкономить на брендовых вещах'
+    suggestion: 'Можно сэкономить на одежде, попробуй подождать сезонные скидки.'
   }
 ];

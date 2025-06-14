@@ -18,7 +18,7 @@ const PeerComparisonCard = ({ comparison }: PeerComparisonCardProps) => {
           <span className="text-2xl">{comparison.emoji}</span>
           <div>
             <h3 className="font-bold text-sm">{comparison.category}</h3>
-            <p className="text-xs text-muted-foreground">vs peers</p>
+            <p className="text-xs text-muted-foreground">по сравнению с друзьями</p>
           </div>
         </div>
         
@@ -34,15 +34,13 @@ const PeerComparisonCard = ({ comparison }: PeerComparisonCardProps) => {
       
       <div className="space-y-2 mb-3">
         <div className="flex justify-between text-xs">
-          <span>You: ${comparison.userSpending}</span>
-          <span>Peers: ${comparison.peerAverage}</span>
+          <span>Ты: {comparison.userSpending}₽</span>
+          <span>Друзья: {comparison.peerAverage}₽</span>
         </div>
-        
         <p className="text-xs text-muted-foreground">
           {comparison.suggestion}
         </p>
       </div>
-      
       <Button 
         size="sm" 
         className={`w-full ${
@@ -51,7 +49,7 @@ const PeerComparisonCard = ({ comparison }: PeerComparisonCardProps) => {
             : 'bg-gradient-money'
         } hover:scale-105 transition-transform`}
       >
-        {isSpendingMore ? 'Set Budget' : 'Keep It Up!'}
+        {isSpendingMore ? 'Поставить лимит' : 'Так держать!'}
       </Button>
     </Card>
   );
