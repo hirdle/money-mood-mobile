@@ -32,12 +32,14 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
     ]);
     const [input, setInput] = useState('');
     const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
-        if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-        }
+        scrollToBottom();
     }, [messages, isWaitingForResponse]);
 
     const callOpenAI = async (question: string): Promise<string> => {
@@ -112,12 +114,13 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                     <DrawerDescription>Задайте любой вопрос о финансах. Я постараюсь помочь.</DrawerDescription>
                 </DrawerHeader>
 
-                <ScrollArea className="flex-grow p-4">
-                    <div className="pr-4" ref={scrollAreaRef}>
+                <ScrollArea className="flex-grow px-4">
+                    <div className="space-y-2">
                         {messages.map((msg, index) => (
                             <ChatMessage key={index} message={msg.text} isUser={msg.isUser} />
                         ))}
                         {isWaitingForResponse && <ChatMessage message="..." isUser={false} isLoading={true} />}
+                        <div ref={messagesEndRef} />
                     </div>
                 </ScrollArea>
                 
