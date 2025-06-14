@@ -6,10 +6,12 @@ import HomePage from './HomePage';
 import GoalsPage from './GoalsPage';
 import NotificationsPage from './NotificationsPage';
 import SocialPage from './SocialPage';
+import BudgetPage from './BudgetPage';
 
 const tabs = [
   { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
   { id: 'goals', label: 'Цели', icon: '🎯', component: GoalsPage },
+  { id: 'budget', label: 'Бюджет', icon: '🧾', component: BudgetPage },
   { id: 'insights', label: 'Инсайты', icon: '💡', component: NotificationsPage, hasNotification: true },
   { id: 'social', label: 'Друзья', icon: '👥', component: SocialPage },
 ];
