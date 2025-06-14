@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Calculator, Landmark, Wallet, TrendingUp, TrendingDown, CircleDollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const budgetData = [
   { month: "Май", income: 110000, expenses: 78000 },
@@ -37,14 +37,27 @@ const chartConfig = {
 const BudgetPage = () => {
   const currentMonth = budgetData[budgetData.length - 1];
   const savings = currentMonth.income - currentMonth.expenses;
+  const navigate = useNavigate();
 
   return (
     <div className="p-4 space-y-6 animate-fade-in">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-glow">Бюджет и налоги</h1>
-        <p className="text-sm text-muted-foreground">
-          Обзор ваших финансовых обязательств и планирование.
-        </p>
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <button className="glass-card p-2 flex items-center gap-2 hover:bg-muted/40"
+          onClick={() => navigate('/analytics')}>
+          📈 <span>Аналитика</span>
+        </button>
+        <button className="glass-card p-2 flex items-center gap-2 hover:bg-muted/40"
+          onClick={() => navigate('/budget-jkh')}>
+          🏢 <span>ЖКХ</span>
+        </button>
+        <button className="glass-card p-2 flex items-center gap-2 hover:bg-muted/40"
+          onClick={() => navigate('/budget-taxes')}>
+          🧾 <span>Налоги</span>
+        </button>
+        <button className="glass-card p-2 flex items-center gap-2 hover:bg-muted/40"
+          onClick={() => navigate('/bank-integration')}>
+          🏦 <span>Интеграция банков</span>
+        </button>
       </div>
 
       <Card className="glass-card">

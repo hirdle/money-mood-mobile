@@ -12,8 +12,11 @@ import ChatWindow from '@/components/ChatWindow';
 
 const tabs = [
   { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
+  { id: 'analytics', label: 'Аналитика', icon: '📈', component: require('./AnalyticsPage').default },
   { id: 'goals', label: 'Цели', icon: '🎯', component: GoalsPage },
   { id: 'budget', label: 'Бюджет', icon: '🧾', component: BudgetPage },
+  { id: 'custom-categories', label: 'Категории', icon: '🗂️', component: require('./CustomCategoriesPage').default },
+  { id: 'planning', label: 'Планирование', icon: '📅', component: require('./DetailedPlanningPage').default },
   { id: 'insights', label: 'Инсайты', icon: '💡', component: NotificationsPage, hasNotification: true },
   { id: 'social', label: 'Друзья', icon: '👥', component: SocialPage },
 ];

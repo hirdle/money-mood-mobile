@@ -16,7 +16,12 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/analytics" element={require("./pages/AnalyticsPage").default()} />
+          <Route path="/budget-jkh" element={require("./pages/BudgetJkhPage").default()} />
+          <Route path="/budget-taxes" element={require("./pages/BudgetTaxesPage").default()} />
+          <Route path="/bank-integration" element={require("./pages/BankIntegrationPage").default()} />
+          <Route path="/custom-categories" element={require("./pages/CustomCategoriesPage").default()} />
+          <Route path="/planning" element={require("./pages/DetailedPlanningPage").default()} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

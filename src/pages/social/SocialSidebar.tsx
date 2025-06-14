@@ -17,6 +17,8 @@ const pages = [
   { title: "Мои друзья", to: "/social/friends", icon: Users },
   { title: "Лидерборд", to: "/social/leaderboard", icon: Trophy },
   { title: "Сравнение категорий", to: "/social/comparison", icon: BarChart2 },
+  { title: "Совместные покупки", to: "/social/joint-purchases", icon: UserPlus },
+  { title: "Влияние окружения", to: "/social/influence", icon: Users },
   { title: "Пригласить", to: "/social/invite", icon: UserPlus },
   { title: "Настройки", to: "/social/settings", icon: Settings },
 ];

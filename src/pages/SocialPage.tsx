@@ -1,4 +1,3 @@
-
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Routes, Route, Navigate } from "react-router-dom"
 import SocialSidebar from "./social/SocialSidebar"
@@ -8,6 +7,8 @@ import PeerComparisonCard from "@/components/PeerComparisonCard"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import JointPurchasesPage from "./social/JointPurchasesPage";
+import SocialInfluencePage from "./social/SocialInfluencePage";
 
 const Leaderboard = () => (
   <div className="space-y-3 px-2 pt-4">
@@ -46,7 +47,6 @@ const AnonToggle = () => {
 }
 
 export default function SocialPage() {
-  // Для маршрутизации подстраниц меню друзей
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -68,10 +68,12 @@ export default function SocialPage() {
                 <AnonToggle />
               </>
             } />
+            <Route path="joint-purchases" element={<JointPurchasesPage />} />
+            <Route path="influence" element={<SocialInfluencePage />} />
             <Route path="*" element={<SocialPlaceholder title="Раздел не найден" />} />
           </Routes>
         </main>
       </div>
     </SidebarProvider>
-  )
+  );
 }
