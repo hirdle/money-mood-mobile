@@ -1,3 +1,4 @@
+
 import {
   Sidebar,
   SidebarContent,
@@ -29,7 +30,8 @@ export default function SocialSidebar() {
   const isActive = (path: string) => location.pathname === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
-  // Collapse logic removed for compatibility
+  // Важно: убираем ошибочный проп open={true} — он не поддерживается SidebarGroup
+
   return (
     <Sidebar className="w-60" collapsible>
       <SidebarTrigger className="m-2 self-end" />
