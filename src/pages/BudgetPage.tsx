@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -15,7 +14,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import { Calculator, Landmark, Wallet, TrendingUp, TrendingDown, CircleDollarSign } from "lucide-react";
+import { Calculator, Landmark, Wallet, TrendingUp, TrendingDown, CircleDollarSign, UsersRound, Car, Home } from "lucide-react";
 
 const budgetData = [
   { month: "Май", income: 110000, expenses: 78000 },
@@ -33,6 +32,21 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig
+
+const monthlyCategories = [
+  { category: "Еда и продукты", amount: 18000 },
+  { category: "Транспорт", amount: 4500 },
+  { category: "ЖКХ", amount: 6200 },
+  { category: "Связь и интернет", amount: 1100 },
+  { category: "Развлечения", amount: 3500 },
+  { category: "Одежда и покупки", amount: 2700 },
+];
+
+const sharedPurchases = [
+  { item: "Подписка на онлайн-кинотеатр", amount: 600, friends: "Настя, Игорь" },
+  { item: "Путешествие в Сочи", amount: 48000, friends: "Костя, Лена" },
+  { item: "Совместный подарок", amount: 8500, friends: "Друзья" },
+];
 
 const BudgetPage = () => {
   const currentMonth = budgetData[budgetData.length - 1];
@@ -92,6 +106,7 @@ const BudgetPage = () => {
         </CardContent>
       </Card>
 
+      {/* Налоги */}
       <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
@@ -116,10 +131,148 @@ const BudgetPage = () => {
                 <TableCell>Налог на имущество (до 01.12)</TableCell>
                 <TableCell className="text-right font-medium">4,200₽</TableCell>
               </TableRow>
-               <TableRow>
+              <TableRow>
                 <TableCell>Доступный вычет</TableCell>
                 <TableCell className="text-right font-medium text-green-400">52,000₽</TableCell>
               </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Налоги на авто */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Car className="h-5 w-5 text-primary" />
+            <span>Налоги на авто</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Название</TableHead>
+                <TableHead className="text-right">Сумма</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>Транспортный налог (до 01.12)</TableCell>
+                <TableCell className="text-right font-medium">6,000₽</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>ОСАГО (страховка, в год)</TableCell>
+                <TableCell className="text-right font-medium">11,500₽</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Штрафы (за 2025 г.)</TableCell>
+                <TableCell className="text-right font-medium">900₽</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* ЖКХ */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Home className="h-5 w-5 text-primary" />
+            <span>ЖКХ</span>
+          </CardTitle>
+          <CardDescription>Коммунальные услуги за последний месяц</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Услуга</TableHead>
+                <TableHead className="text-right">Сумма</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>Электричество</TableCell>
+                <TableCell className="text-right font-medium">1,350₽</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Вода и канализация</TableCell>
+                <TableCell className="text-right font-medium">1,200₽</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Отопление</TableCell>
+                <TableCell className="text-right font-medium">2,000₽</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Интернет</TableCell>
+                <TableCell className="text-right font-medium">850₽</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Обслуживание дома/кап. ремонт</TableCell>
+                <TableCell className="text-right font-medium">800₽</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Месячные траты по категориям */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Calculator className="h-5 w-5 text-primary" />
+            <span>Средние расходы по категориям</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Категория</TableHead>
+                <TableHead className="text-right">Сумма в месяц</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {monthlyCategories.map((item) => (
+                <TableRow key={item.category}>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell className="text-right font-medium">{item.amount.toLocaleString()}₽</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Совместные покупки с друзьями */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <UsersRound className="h-5 w-5 text-primary" />
+            <span>Совместные покупки с друзьями</span>
+          </CardTitle>
+          <CardDescription>
+            Общее участие в оплате или планах с друзьями
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Покупка</TableHead>
+                <TableHead>Друзья</TableHead>
+                <TableHead className="text-right">Сумма</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sharedPurchases.map((item) => (
+                <TableRow key={item.item}>
+                  <TableCell>{item.item}</TableCell>
+                  <TableCell>{item.friends}</TableCell>
+                  <TableCell className="text-right font-medium">{item.amount.toLocaleString()}₽</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>
