@@ -10,9 +10,9 @@ interface ExpenseCardProps {
 
 const ExpenseCard = ({ category }: ExpenseCardProps) => {
   return (
-    <Card className="p-4 glass-card hover:scale-105 transition-all duration-200">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <Card className="p-4 glass-card transition-none w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 w-full">
           <MoodRing size="sm" mood={category.mood} />
           <div>
             <h3 className="font-semibold text-sm flex items-center gap-1">
@@ -20,13 +20,13 @@ const ExpenseCard = ({ category }: ExpenseCardProps) => {
               {category.name}
             </h3>
             <p className="text-xs text-muted-foreground">
-              {category.percentage}% от трат
+              {category.percentage}% от расходов
             </p>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-right w-full sm:w-fit flex flex-row sm:flex-col justify-between sm:justify-end items-center sm:items-end gap-2 mt-2 sm:mt-0">
           <p className="font-bold text-lg">{category.amount}₽</p>
-          <Button size="sm" className="mt-1 bg-gradient-to-r from-neon-pink to-cyber-purple hover:from-cyber-purple hover:to-neon-pink">
+          <Button size="sm" className="bg-gradient-to-r from-neon-pink to-cyber-purple hover:from-cyber-purple hover:to-neon-pink transition-none">
             Оптимизировать
           </Button>
         </div>

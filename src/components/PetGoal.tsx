@@ -21,7 +21,7 @@ const PetGoal = ({ goal }: PetGoalProps) => {
   const currentPetEmoji = petEmojis[goal.petType][goal.petStage - 1];
 
   return (
-    <Card className="p-4 glass-card hover:scale-105 transition-all duration-200">
+    <Card className="p-4 glass-card transition-none">
       <div className="text-center mb-3">
         <div className="text-4xl mb-2">{currentPetEmoji}</div>
         <h3 className="font-bold text-sm flex items-center justify-center gap-1">
@@ -42,7 +42,7 @@ const PetGoal = ({ goal }: PetGoalProps) => {
           <p className="text-xs text-muted-foreground mb-2">
             осталось {goal.daysLeft} дней
           </p>
-          <Button size="sm" className="w-full bg-gradient-money hover:scale-105 transition-transform">
+          <Button size="sm" className="w-full bg-gradient-money transition-none">
             Добавить денег 💰
           </Button>
         </div>

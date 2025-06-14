@@ -21,13 +21,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
-      {/* Main Content */}
+      {/* Главный контент */}
       <div className="pb-20">
         <ActiveComponent />
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border/50">
+      {/* Нижняя панель навигации */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border/50">
         <div className="flex justify-around items-center py-2 px-4 max-w-md mx-auto">
           {tabs.map((tab) => (
             <TabButton
@@ -42,7 +42,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Chat Bubble */}
+      {/* Чат-пузырь */}
       <ChatBubble />
     </div>
   );

@@ -9,7 +9,7 @@ const HomePage = () => {
 
   return (
     <div className="p-4 space-y-6">
-      {/* Header */}
+      {/* Заголовок */}
       <div className="text-center space-y-2">
         <h1 className="text-2xl font-bold text-glow">Настроение твоих денег 💰</h1>
         <p className="text-sm text-muted-foreground">
@@ -17,7 +17,7 @@ const HomePage = () => {
         </p>
       </div>
 
-      {/* Mood Ring Center */}
+      {/* Кольцо настроения */}
       <div className="flex flex-col items-center space-y-4">
         <MoodRing size="lg" mood={overallMood} />
         <div className="text-center">
@@ -31,7 +31,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Quick Stats */}
+      {/* Быстрая статистика */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gradient-money p-3 rounded-2xl text-center">
           <p className="text-white text-lg font-bold">15670₽</p>
@@ -43,7 +43,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Expense Categories */}
+      {/* Категории расходов */}
       <div className="space-y-3">
         <h2 className="text-lg font-bold">Куда потратил деньги 📊</h2>
         {mockExpenseCategories.map((category) => (
