@@ -1,6 +1,6 @@
 
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import SocialSidebar from "./social/SocialSidebar"
 import SocialPlaceholder from "./social/SocialPlaceholder"
 import { mockPeerComparisons } from "@/data/mockDataRu"
@@ -32,7 +32,6 @@ const CategoryComparison = () => (
   </div>
 );
 
-// Переключатель анонимности:
 const AnonToggle = () => {
   const [anon, setAnon] = useState(false)
   return (
@@ -49,7 +48,7 @@ const AnonToggle = () => {
 export default function SocialPage() {
   // Для маршрутизации подстраниц меню друзей
   return (
-    <SidebarProvider collapsedWidth={56}>
+    <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <SocialSidebar />
         <main className="flex-1 min-h-screen py-6">

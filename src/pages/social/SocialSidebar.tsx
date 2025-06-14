@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -20,21 +19,20 @@ const pages = [
   { title: "Сравнение категорий", to: "/social/comparison", icon: BarChart2 },
   { title: "Пригласить", to: "/social/invite", icon: UserPlus },
   { title: "Настройки", to: "/social/settings", icon: Settings },
-]
+];
 
 export default function SocialSidebar() {
-  const { collapsed } = useSidebar()
-  const location = useLocation()
-
-  const isActive = (path: string) => location.pathname === path
+  // We will use only the NavLink's isActive for link styling
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50"
-
+    isActive ? "bg-muted text-primary font-medium" : "hover:bg-muted/50";
+  // Collapse logic removed for compatibility
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible>
+    <Sidebar className="w-60" collapsible>
       <SidebarTrigger className="m-2 self-end" />
       <SidebarContent>
-        <SidebarGroup open={true}>
+        <SidebarGroup>
           <SidebarGroupLabel>Друзья</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -43,7 +41,7 @@ export default function SocialSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink to={item.to} end className={getNavCls}>
                       <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                      <span>{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -53,5 +51,5 @@ export default function SocialSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
