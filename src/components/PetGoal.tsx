@@ -1,14 +1,17 @@
-
+import { useState } from "react";
 import { SavingsGoal } from '@/types/financial';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import BankSelectDialog from "./BankSelectDialog";
 
 interface PetGoalProps {
   goal: SavingsGoal;
 }
 
 const PetGoal = ({ goal }: PetGoalProps) => {
+  const [bankDialogOpen, setBankDialogOpen] = useState(false);
+  
   const progress = (goal.currentAmount / goal.targetAmount) * 100;
   
   const petEmojis = {
@@ -22,6 +25,7 @@ const PetGoal = ({ goal }: PetGoalProps) => {
 
   return (
     <Card className="p-4 glass-card transition-none">
+      <BankSelectDialog open={bankDialogOpen} onOpenChange={setBankDialogOpen} />
       <div className="text-center mb-3">
         <div className="text-4xl mb-2">{currentPetEmoji}</div>
         <h3 className="font-bold text-sm flex items-center justify-center gap-1">
@@ -42,7 +46,12 @@ const PetGoal = ({ goal }: PetGoalProps) => {
           <p className="text-xs text-muted-foreground mb-2">
             осталось {goal.daysLeft} дней
           </p>
-          <Button size="sm" className="w-full bg-gradient-money transition-none">
+          <Button
+            size="sm"
+            className="w-full bg-gradient-money transition-none"
+            onClick={() => setBankDialogOpen(true)}
+            type="button"
+          >
             Добавить денег 💰
           </Button>
         </div>
