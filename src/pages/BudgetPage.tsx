@@ -52,6 +52,28 @@ const BudgetPage = () => {
   const currentMonth = budgetData[budgetData.length - 1];
   const savings = currentMonth.income - currentMonth.expenses;
 
+  // Суммы по категориям на основе секций выше
+  const categories = [
+    { label: "Еда и продукты", amount: 18000 },
+    { label: "Транспорт", amount: 4500 },
+    { label: "ЖКХ", amount: 6200 + 1350 + 1200 + 2000 + 850 + 800 }, // из блока "ЖКХ"
+    { label: "Связь и интернет", amount: 1100 + 850 },
+    { label: "Развлечения", amount: 3500 },
+    { label: "Одежда и покупки", amount: 2700 },
+    { label: "Совместные покупки с друзьями", amount: 600 + 48000 + 8500 },
+    { label: "Крупные покупки", amount: 120000 + 85000 },
+    { label: "Налоги", amount: 15600 + 4200 + 6000 }, // НДФЛ + имущество + авто
+    { label: "ОСАГО/Штрафы", amount: 11500 + 900 },
+  ];
+  // Суммарные расходы
+  const totalExpenses = categories.reduce((acc, cur) => acc + cur.amount, 0);
+
+  // Для процентов
+  const categoriesWithPercent = categories.map(cat => ({
+    ...cat,
+    percent: ((cat.amount / totalExpenses) * 100).toFixed(1)
+  }));
+
   return (
     <div className="p-4 space-y-6 animate-fade-in">
       <div className="text-center space-y-2">
@@ -240,6 +262,44 @@ const BudgetPage = () => {
                   <TableCell className="text-right font-medium">{item.amount.toLocaleString()}₽</TableCell>
                 </TableRow>
               ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Подробная структура расходов */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <CircleDollarSign className="h-5 w-5 text-primary" />
+            <span>Подробная структура расходов</span>
+          </CardTitle>
+          <CardDescription>
+            Все ваши траты по категориям. Сумма: <span className="font-bold">{totalExpenses.toLocaleString()}₽</span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Категория</TableHead>
+                <TableHead className="text-right">Сумма, ₽</TableHead>
+                <TableHead className="text-right">Доля (%)</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {categoriesWithPercent.map((cat) => (
+                <TableRow key={cat.label}>
+                  <TableCell>{cat.label}</TableCell>
+                  <TableCell className="text-right">{cat.amount.toLocaleString()}</TableCell>
+                  <TableCell className="text-right">{cat.percent}</TableCell>
+                </TableRow>
+              ))}
+              <TableRow>
+                <TableCell className="font-semibold">Итого</TableCell>
+                <TableCell className="text-right font-semibold">{totalExpenses.toLocaleString()}</TableCell>
+                <TableCell className="text-right font-semibold">100.0</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </CardContent>
