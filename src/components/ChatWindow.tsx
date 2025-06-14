@@ -19,32 +19,59 @@ const faqs = [
     "Расскажи про инвестиции для новичков"
 ];
 
+const faqAnswers: { [key: string]: string } = {
+    "Как составить бюджет?": "Для составления бюджета следуйте правилу 50/30/20: 50% на необходимые расходы (жилье, еда, транспорт), 30% на желания (развлечения, рестораны), 20% на сбережения и погашение долгов. Ведите учет доходов и расходов, планируйте крупные покупки заранее.",
+    "Как уменьшить налоги?": "Используйте налоговые вычеты: стандартные, социальные (лечение, образование, благотворительность), имущественные (покупка жилья). Откройте ИИС для инвестиционного вычета. Ведите документооборот для подтверждения расходов.",
+    "Какие есть способы накопления?": "Основные способы: банковские вклады (низкий риск, невысокая доходность), облигации (средний риск и доходность), акции (высокий риск, потенциально высокая доходность), недвижимость, драгоценные металлы. Диверсифицируйте портфель.",
+    "Расскажи про инвестиции для новичков": "Начните с изучения основ: облигации федерального займа (ОФЗ) - самый безопасный инструмент, ETF на широкий рынок для диверсификации, постепенно изучайте отдельные акции. Инвестируйте регулярно небольшими суммами, не вкладывайте все сбережения сразу."
+};
+
 const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
     const [messages, setMessages] = useState<Message[]>([
-        { text: "Здравствуйте! Я ваш финансовый помощник на базе Perplexity AI. Чем могу помочь?", isUser: false }
+        { text: "Здравствуйте! Я ваш финансовый помощник. Чем могу помочь?", isUser: false }
     ]);
     const [input, setInput] = useState('');
-    const [apiKey, setApiKey] = useState('');
     const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-    const scrollAreaViewport = useRef<HTMLDivElement>(null);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (scrollAreaViewport.current) {
-            scrollAreaViewport.current.scrollTo({ top: scrollAreaViewport.current.scrollHeight, behavior: 'smooth' });
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
         }
     }, [messages, isWaitingForResponse]);
-    
-    useEffect(() => {
-        const storedApiKey = localStorage.getItem('perplexity-api-key');
-        if (storedApiKey) {
-            setApiKey(storedApiKey);
-        }
-    }, []);
 
-    const handleApiKeyChange = (key: string) => {
-        setApiKey(key);
-        localStorage.setItem('perplexity-api-key', key);
-    }
+    const callOpenAI = async (question: string): Promise<string> => {
+        try {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        { 
+                            role: 'system', 
+                            content: 'Ты финансовый консультант. Отвечай кратко и по делу на русском языке. Давай практические советы по личным финансам, бюджетированию, инвестициям и налогам для жителей России.' 
+                        },
+                        { role: 'user', content: question }
+                    ],
+                    max_tokens: 500,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('OpenAI API error');
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (error) {
+            console.error("Error calling OpenAI API:", error);
+            return "Извините, произошла ошибка при обращении к AI. Попробуйте позже.";
+        }
+    };
 
     const handleSendMessage = async (text: string) => {
         if (!text.trim()) return;
@@ -52,46 +79,20 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         const userMessage: Message = { text, isUser: true };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
-        
-        if (!apiKey) {
-            setTimeout(() => {
-                setMessages(prev => [...prev, { text: "Пожалуйста, введите ваш API ключ для Perplexity AI в поле выше, чтобы я мог вам ответить.", isUser: false }]);
-            }, 1000);
-            return;
-        }
-
         setIsWaitingForResponse(true);
 
-        try {
-            const response = await fetch('https://api.perplexity.ai/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    model: 'llama-3.1-sonar-small-128k-online',
-                    messages: [
-                        { role: 'system', content: 'You are a helpful financial assistant. Be precise and concise. Respond in Russian.' },
-                        { role: 'user', content: text }
-                    ],
-                }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("API Error:", errorData);
-                throw new Error(errorData.error?.message || 'API call failed');
-            }
-
-            const data = await response.json();
-            const botMessage: Message = { text: data.choices[0].message.content, isUser: false };
+        // Check if it's a FAQ question
+        if (faqAnswers[text]) {
+            setTimeout(() => {
+                const botMessage: Message = { text: faqAnswers[text], isUser: false };
+                setMessages(prev => [...prev, botMessage]);
+                setIsWaitingForResponse(false);
+            }, 1000);
+        } else {
+            // Call OpenAI for other questions
+            const response = await callOpenAI(text);
+            const botMessage: Message = { text: response, isUser: false };
             setMessages(prev => [...prev, botMessage]);
-        } catch (error) {
-            console.error("Error calling Perplexity API:", error);
-            const errorMessage: Message = { text: `Извините, произошла ошибка при обращении к API. ${error instanceof Error ? error.message : ''}`, isUser: false };
-            setMessages(prev => [...prev, errorMessage]);
-        } finally {
             setIsWaitingForResponse(false);
         }
     };
@@ -111,21 +112,8 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                     <DrawerDescription>Задайте любой вопрос о финансах. Я постараюсь помочь.</DrawerDescription>
                 </DrawerHeader>
 
-                <div className="px-4 pb-2 flex-shrink-0">
-                    <Input 
-                        type="password"
-                        placeholder="Ваш Perplexity AI API ключ"
-                        value={apiKey}
-                        onChange={(e) => handleApiKeyChange(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                        Ваш ключ хранится только в вашем браузере.{" "}
-                        <a href="https://www.perplexity.ai/settings/api" target="_blank" rel="noopener noreferrer" className="underline">Получить ключ</a>
-                    </p>
-                </div>
-
-                <ScrollArea className="flex-grow p-4" viewportRef={scrollAreaViewport}>
-                    <div className="pr-4">
+                <ScrollArea className="flex-grow p-4">
+                    <div className="pr-4" ref={scrollAreaRef}>
                         {messages.map((msg, index) => (
                             <ChatMessage key={index} message={msg.text} isUser={msg.isUser} />
                         ))}
