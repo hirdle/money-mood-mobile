@@ -9,14 +9,18 @@ import SocialPage from './SocialPage';
 import BudgetPage from './BudgetPage';
 import { Toaster } from "@/components/ui/sonner";
 import ChatWindow from '@/components/ChatWindow';
+// -- Fix: ES imports for tabs
+import AnalyticsPage from './AnalyticsPage';
+import CustomCategoriesPage from './CustomCategoriesPage';
+import DetailedPlanningPage from './DetailedPlanningPage';
 
 const tabs = [
   { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
-  { id: 'analytics', label: 'Аналитика', icon: '📈', component: require('./AnalyticsPage').default },
+  { id: 'analytics', label: 'Аналитика', icon: '📈', component: AnalyticsPage },
   { id: 'goals', label: 'Цели', icon: '🎯', component: GoalsPage },
   { id: 'budget', label: 'Бюджет', icon: '🧾', component: BudgetPage },
-  { id: 'custom-categories', label: 'Категории', icon: '🗂️', component: require('./CustomCategoriesPage').default },
-  { id: 'planning', label: 'Планирование', icon: '📅', component: require('./DetailedPlanningPage').default },
+  { id: 'custom-categories', label: 'Категории', icon: '🗂️', component: CustomCategoriesPage },
+  { id: 'planning', label: 'Планирование', icon: '📅', component: DetailedPlanningPage },
   { id: 'insights', label: 'Инсайты', icon: '💡', component: NotificationsPage, hasNotification: true },
   { id: 'social', label: 'Друзья', icon: '👥', component: SocialPage },
 ];
@@ -59,3 +63,4 @@ const Index = () => {
 };
 
 export default Index;
+
