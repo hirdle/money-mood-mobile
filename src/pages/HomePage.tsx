@@ -11,7 +11,7 @@ const HomePage = () => {
     <div className="p-4 space-y-6">
       {/* Заголовок */}
       <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-glow">Настроение твоих денег 🪙</h1>
+        <h1 className="text-2xl font-bold text-glow">Настроение твоих денег 💰</h1>
         <p className="text-sm text-muted-foreground">
           Проверка настроения за эту неделю
         </p>
