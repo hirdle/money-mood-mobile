@@ -8,10 +8,10 @@ import NotificationsPage from './NotificationsPage';
 import SocialPage from './SocialPage';
 
 const tabs = [
-  { id: 'home', label: 'Home', icon: '🏠', component: HomePage },
-  { id: 'goals', label: 'Goals', icon: '🎯', component: GoalsPage },
-  { id: 'insights', label: 'Insights', icon: '💡', component: NotificationsPage, hasNotification: true },
-  { id: 'social', label: 'Social', icon: '👥', component: SocialPage },
+  { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
+  { id: 'goals', label: 'Цели', icon: '🎯', component: GoalsPage },
+  { id: 'insights', label: 'Инсайты', icon: '💡', component: NotificationsPage, hasNotification: true },
+  { id: 'social', label: 'Друзья', icon: '👥', component: SocialPage },
 ];
 
 const Index = () => {

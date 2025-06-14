@@ -1,5 +1,5 @@
 
-import { mockSavingsGoals } from '@/data/mockData';
+import { mockSavingsGoals } from '@/data/mockDataRu';
 import PetGoal from '@/components/PetGoal';
 
 const GoalsPage = () => {
@@ -7,9 +7,9 @@ const GoalsPage = () => {
     <div className="p-4 space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-glow">Your Money Pets 🐾</h1>
+        <h1 className="text-2xl font-bold text-glow">Твои денежные питомцы 🐾</h1>
         <p className="text-sm text-muted-foreground">
-          Feed them with savings to watch them grow!
+          Корми их накоплениями и смотри, как они растут!
         </p>
       </div>
 
@@ -23,22 +23,22 @@ const GoalsPage = () => {
       {/* Add New Goal */}
       <div className="bg-gradient-to-r from-electric-blue to-cyber-purple p-4 rounded-2xl text-center">
         <div className="text-4xl mb-2">➕</div>
-        <h3 className="text-white font-bold mb-1">Create New Goal</h3>
+        <h3 className="text-white font-bold mb-1">Создать новую цель</h3>
         <p className="text-white/80 text-xs mb-3">
-          Start raising a new money pet!
+          Начни выращивать нового денежного питомца!
         </p>
         <button className="bg-white text-cyber-purple px-4 py-2 rounded-xl font-medium text-sm hover:scale-105 transition-transform">
-          Choose Your Pet
+          Выбрать питомца
         </button>
       </div>
 
       {/* Tips */}
       <div className="bg-muted/50 p-4 rounded-2xl">
-        <h3 className="font-bold text-sm mb-2">💡 Pro Tips</h3>
+        <h3 className="font-bold text-sm mb-2">💡 Лайфхаки</h3>
         <ul className="text-xs text-muted-foreground space-y-1">
-          <li>• Drag money between goals to reallocate</li>
-          <li>• Pets evolve faster with consistent feeding</li>
-          <li>• Set up auto-save for daily pet food</li>
+          <li>• Перетаскивай деньги между целями для перераспределения</li>
+          <li>• Питомцы эволюционируют быстрее при регулярном кормлении</li>
+          <li>• Настрой автосохранение для ежедневного корма питомца</li>
         </ul>
       </div>
     </div>

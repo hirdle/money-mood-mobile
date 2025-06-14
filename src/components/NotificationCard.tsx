@@ -19,7 +19,7 @@ const NotificationCard = ({ notification }: NotificationCardProps) => {
   return (
     <Card className={cn(
       'p-4 glass-card hover:scale-105 transition-all duration-200',
-      notification.isNew && 'ring-2 ring-neon-pink animate-pulse-mood'
+      notification.isNew && 'ring-2 ring-neon-pink'
     )}>
       <div className="flex items-start gap-3">
         <div className={cn(
@@ -34,7 +34,7 @@ const NotificationCard = ({ notification }: NotificationCardProps) => {
             <h3 className="font-bold text-sm">{notification.title}</h3>
             {notification.isNew && (
               <span className="px-2 py-1 bg-neon-pink text-white text-xs rounded-full">
-                NEW
+                НОВОЕ
               </span>
             )}
           </div>
