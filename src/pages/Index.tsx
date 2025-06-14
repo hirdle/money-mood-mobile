@@ -7,6 +7,7 @@ import GoalsPage from './GoalsPage';
 import NotificationsPage from './NotificationsPage';
 import SocialPage from './SocialPage';
 import BudgetPage from './BudgetPage';
+import { Toaster } from "@/components/ui/sonner";
 
 const tabs = [
   { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
@@ -46,6 +47,7 @@ const Index = () => {
 
       {/* Чат-пузырь */}
       <ChatBubble />
+      <Toaster richColors position="top-center" />
     </div>
   );
 };
