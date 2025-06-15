@@ -1,3 +1,4 @@
+
 import { mockPeerComparisons } from '@/data/mockDataRu';
 import PeerComparisonCard from '@/components/PeerComparisonCard';
 
@@ -25,7 +26,7 @@ const SocialPage = () => {
       <div className="space-y-3">
         <h2 className="text-lg font-bold">📊 Разбор по категориям</h2>
         {mockPeerComparisons.map((comparison, index) => (
-          <PeerComparisonCard key={index} comparison={comparison} directiveStyle />
+          <PeerComparisonCard key={index} comparison={comparison} />
         ))}
       </div>
 
