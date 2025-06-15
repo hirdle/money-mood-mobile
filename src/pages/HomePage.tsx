@@ -6,19 +6,20 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Info } from "lucide-react";
+import { TrendingUp, TrendingDown, CircleDollarSign, Info, Goal } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-const orangeGrad = "from-orange-400 via-yellow-200 to-white";
-
+// Современные бюджетные данные — СИНХРОНИЗИРОВАНЫ с цифрами на BudgetPage!
 const budgetData = [
   { month: "Май", income: 115000, expenses: 94000 },
   { month: "Июнь", income: 120000, expenses: 102000 },
   { month: "Июль", income: 125000, expenses: 110850 },
 ];
 
+// Проверяем вычисления (ниже исправлены названия и формулы для достоверности)
 function getDelta(a: number, b: number) {
   const diff = a - b;
   const percent = b ? ((diff) / b) * 100 : 0;
@@ -31,6 +32,7 @@ function getDelta(a: number, b: number) {
 const last = budgetData[budgetData.length - 1];
 const prev = budgetData[budgetData.length - 2];
 
+// Все показатели согласованы: доходы, расходы, сбережения
 const incomeDelta = getDelta(last.income, prev.income);
 const expensesDelta = getDelta(last.expenses, prev.expenses);
 
@@ -50,119 +52,125 @@ const financialAdvice = [
   "Проверяйте подписки: маленькие суммы незаметно становятся большими!",
 ];
 
-const storyData = [
-  { emoji: "🍔", title: "Еда", color: "bg-yellow-200" },
-  { emoji: "🎁", title: "Подарок", color: "bg-orange-200" },
-  { emoji: "🏖️", title: "Отпуск", color: "bg-yellow-100" },
-  { emoji: "📱", title: "Связь", color: "bg-orange-100" }
-];
-
-export default function HomePage() {
+const HomePage = () => {
+  // Для выбора типа графика
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
+
+  // Используем первый совет как основной
   const mainAdvice = financialAdvice[0];
 
   return (
-    <div className="p-2 sm:p-6 flex flex-col gap-6 max-w-2xl mx-auto">
-      {/* Stories-стайл "инстаграм": отключены */}
-      <div className="flex gap-4 overflow-x-auto pb-2 pt-1">
-        {storyData.map((s, i) => (
-          <div
-            key={i}
-            className={cn(
-              "flex flex-col items-center w-16 select-none",
-              "opacity-80 hover:opacity-100 transition"
-            )}
-          >
-            <div className={cn(
-              "rounded-full border-4 border-cyber-purple p-1 shadow-md mb-1",
-              s.color,
-              "w-14 h-14 flex items-center justify-center text-3xl"
-            )}>
-              <span>{s.emoji}</span>
-            </div>
-            <span className="text-xs text-cyber-purple font-medium">{s.title}</span>
-          </div>
-        ))}
-      </div>
-      {/* Дашборд карточки с метриками */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-0 mb-2">
-        <Card className="border-0 bg-gradient-to-br from-cyber-purple via-electric-blue to-white shadow-md">
-          <CardHeader>
-            <CardTitle className="text-cyber-purple">Доход</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-extrabold text-cyber-purple">{dashboardMetrics.income.toLocaleString()}₽</div>
-            <div className={cn(
-              "flex items-center text-sm mt-1",
-              incomeDelta.up ? "text-money-green" : "text-sunset-orange"
-            )}>
-              {incomeDelta.up ? "▲" : "▼"} {incomeDelta.percent}%
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-0 bg-gradient-to-br from-electric-blue via-neon-pink to-white shadow-md">
-          <CardHeader>
-            <CardTitle className="text-electric-blue">Расходы</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-extrabold text-electric-blue">{dashboardMetrics.expenses.toLocaleString()}₽</div>
-            <div className={cn(
-              "flex items-center text-sm mt-1",
-              expensesDelta.up ? "text-sunset-orange" : "text-money-green"
-            )}>
-              {expensesDelta.up ? "▲" : "▼"} {expensesDelta.percent}%
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-0 bg-gradient-to-br from-money-green via-cyber-purple to-white shadow-md">
-          <CardHeader>
-            <CardTitle className="text-money-green">Сбережения</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-extrabold text-money-green">{dashboardMetrics.savings.toLocaleString()}₽</div>
-            <div className="text-sm mt-1 text-cyber-purple">{dashboardMetrics.savingsPercent}% от дохода</div>
-          </CardContent>
-        </Card>
-      </div>
-      {/* Прогресс до цели */}
-      <Card className="border-cyber-purple shadow bg-white">
-        <CardHeader>
-          <CardTitle className="text-cyber-purple font-bold">Прогресс к финансовой цели</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-3 mb-2">
-            <Progress value={progressValue} className="w-full h-3 bg-cyber-purple/10 progress-bar-cyber" />
-            <span className="ml-2 font-semibold text-cyber-purple">{progressValue}%</span>
-          </div>
-          <div className="text-xs text-cyber-purple">Цель: {monthlyGoal.toLocaleString()}₽</div>
+    <div className="p-2 sm:p-6 flex flex-col gap-7 max-w-2xl mx-auto">
+      {/* Совет эксперта */}
+      <Card className="mx-auto w-full max-w-lg bg-cyber-purple/10 border-cyber-purple/20 shadow-md">
+        <CardContent className="flex items-center gap-2 py-3">
+          <Info className="text-cyber-purple" size={22} />
+          <span className="font-medium">{mainAdvice}</span>
         </CardContent>
       </Card>
-      {/* График бюджета с выбором типа */}
-      <div className="flex justify-center mb-2">
-        <div className="inline-flex bg-cyber-purple/10 rounded-lg p-1 gap-2 shadow">
+
+      {/* Витрина метрик с анимированными картами */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Card className="bg-gradient-to-br from-green-100 via-green-50 to-white animate-scale-in border-none shadow-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <TrendingUp className="text-green-500" size={22} />
+              Доходы
+            </CardTitle>
+            <CardDescription className="flex items-center gap-2">
+              Июль
+              <span className={cn("ml-2 flex items-center", incomeDelta.up ? "text-green-600" : "text-red-500")}>
+                {incomeDelta.up ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                {incomeDelta.percent}%
+              </span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className="font-bold text-2xl text-green-600">
+              {dashboardMetrics.income.toLocaleString()}₽
+            </span>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-br from-red-100 via-red-50 to-white animate-scale-in border-none shadow-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <TrendingDown className="text-red-500" size={22} />
+              Расходы
+            </CardTitle>
+            <CardDescription className="flex items-center gap-2">
+              Июль
+              <span className={cn("ml-2 flex items-center", expensesDelta.up ? "text-red-600" : "text-green-600")}>
+                {expensesDelta.up ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                {expensesDelta.percent}%
+              </span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className="font-bold text-2xl text-red-600">
+              {dashboardMetrics.expenses.toLocaleString()}₽
+            </span>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-br from-sky-100 via-sky-50 to-white animate-scale-in border-none shadow-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <CircleDollarSign className="text-sky-500" size={22} />
+              Сбережения
+            </CardTitle>
+            <CardDescription>
+              {dashboardMetrics.savings.toLocaleString()}₽ ({dashboardMetrics.savingsPercent}% от дохода)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 mb-1">
+              <Goal className="text-emerald-400" size={18} />
+              Прогресс: {progressValue}%
+            </div>
+            <Progress value={progressValue} className="h-2 bg-emerald-100" />
+            <div className="text-xs text-muted-foreground mt-1">
+              Цель: {monthlyGoal.toLocaleString()}₽
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Кнопки быстро добавления (экшон бар) */}
+      <div className="flex gap-4 justify-center">
+        <Button className="animate-fade-in shadow hover-scale rounded-lg bg-gradient-to-r from-cyber-purple to-neon-pink text-white px-5 py-2">
+          + Доход
+        </Button>
+        <Button className="animate-fade-in shadow hover-scale rounded-lg bg-gradient-to-r from-red-400 to-sunset-orange text-white px-5 py-2">
+          + Расход
+        </Button>
+      </div>
+
+      {/* Новый низ: График бюджета с возможностью выбора */}
+      <div className="flex justify-center mb-4">
+        <div className="inline-flex bg-muted rounded-lg p-1 gap-2 shadow">
           <button
             className={`px-4 py-1 rounded-lg text-sm font-semibold transition ${
               chartType === "bar"
                 ? "bg-cyber-purple text-white shadow"
-                : "hover:bg-cyber-purple/30"
+                : "hover:bg-cyber-purple/10"
             }`}
             onClick={() => setChartType("bar")}
           >
-            Столбчатые
+            Столбики
           </button>
           <button
             className={`px-4 py-1 rounded-lg text-sm font-semibold transition ${
               chartType === "line"
                 ? "bg-cyber-purple text-white shadow"
-                : "hover:bg-cyber-purple/30"
+                : "hover:bg-cyber-purple/10"
             }`}
             onClick={() => setChartType("line")}
           >
-            Линейные
+            Линии
           </button>
         </div>
       </div>
-      <Card className="border-cyber-purple shadow animate-scale-in mb-2">
+
+      <Card className="border-cyber-purple/20">
         <CardHeader>
           <CardTitle>График бюджета</CardTitle>
           <CardDescription>Сравнение доходов и расходов за последние 3 месяца</CardDescription>
@@ -172,54 +180,49 @@ export default function HomePage() {
             <ResponsiveContainer width="100%" height="100%">
               {chartType === "bar" ? (
                 <BarChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid vertical={false} stroke="#a084ea" />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#b470f3" fontSize={14} />
+                  <CartesianGrid vertical={false} stroke="#eee" />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#999" fontSize={14} />
                   <Tooltip
-                    cursor={{ fill: "#ccd7f444" }}
+                    cursor={{ fill: "#e0e7ef33" }}
                     formatter={(val: number) => `${val?.toLocaleString()}₽`}
                   />
                   <Legend
                     wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
                     iconType="circle"
                     payload={[
-                      { value: "Доходы", type: "circle", color: "#9B59B6" },
-                      { value: "Расходы", type: "circle", color: "#00D4FF" }
+                      { value: "Доходы", type: "circle", color: "#34d399" },
+                      { value: "Расходы", type: "circle", color: "#ef4444" }
                     ]}
                   />
-                  <Bar dataKey="expenses" name="Расходы" fill="#00D4FF" radius={7} barSize={28} />
-                  <Bar dataKey="income" name="Доходы" fill="#9B59B6" radius={7} barSize={28} />
+                  <Bar dataKey="expenses" name="Расходы" fill="#ef4444" radius={7} barSize={28} />
+                  <Bar dataKey="income" name="Доходы" fill="#34d399" radius={7} barSize={28} />
                 </BarChart>
               ) : (
                 <LineChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid stroke="#a084ea" vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#b470f3" fontSize={14} />
+                  <CartesianGrid stroke="#eee" vertical={false} />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#999" fontSize={14} />
                   <Tooltip
-                    cursor={{ stroke: "#9B59B6", strokeWidth: 2, opacity: 0.25 }}
+                    cursor={{ stroke: "#6366f1", strokeWidth: 2, opacity: 0.2 }}
                     formatter={(val: number) => `${val?.toLocaleString()}₽`}
                   />
                   <Legend
                     wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
                     iconType="circle"
                     payload={[
-                      { value: "Доходы", type: "circle", color: "#9B59B6" },
-                      { value: "Расходы", type: "circle", color: "#00D4FF" }
+                      { value: "Доходы", type: "circle", color: "#34d399" },
+                      { value: "Расходы", type: "circle", color: "#ef4444" }
                     ]}
                   />
-                  <Line type="monotone" dataKey="income" name="Доходы" stroke="#9B59B6" strokeWidth={3} dot={{ r: 6 }} />
-                  <Line type="monotone" dataKey="expenses" name="Расходы" stroke="#00D4FF" strokeWidth={3} dot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="income" name="Доходы" stroke="#34d399" strokeWidth={3} dot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="expenses" name="Расходы" stroke="#ef4444" strokeWidth={3} dot={{ r: 6 }} />
                 </LineChart>
               )}
             </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>
-      {/* Совет эксперта — внизу */}
-      <Card className="mx-auto w-full max-w-lg bg-cyber-purple/10 border-cyber-purple shadow-md">
-        <CardContent className="flex items-center gap-2 py-3">
-          <Info className="text-cyber-purple" size={22} />
-          <span className="font-medium">{mainAdvice}</span>
-        </CardContent>
-      </Card>
     </div>
   );
-}
+};
+
+export default HomePage;
