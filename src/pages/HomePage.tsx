@@ -69,7 +69,7 @@ const HomePage = () => {
 
       {/* Витрина метрик */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <Card className="bg-warning-yellow/60 backdrop-blur-md border-none shadow-md">
+        <Card className="bg-white/90 border border-yellow-100 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-orange-900">
               <TrendingUp className="text-orange-600" size={22} />
@@ -89,7 +89,7 @@ const HomePage = () => {
             </span>
           </CardContent>
         </Card>
-        <Card className="bg-sunset-orange/40 backdrop-blur-md border-none shadow-md">
+        <Card className="bg-white/90 border border-yellow-100 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-yellow-900">
               <TrendingDown className="text-yellow-600" size={22} />
@@ -109,7 +109,7 @@ const HomePage = () => {
             </span>
           </CardContent>
         </Card>
-        <Card className="bg-warning-yellow/60 backdrop-blur-md border-none shadow-md">
+        <Card className="bg-white/90 border border-yellow-100 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-orange-500">
               <CircleDollarSign className="text-orange-400" size={22} />
@@ -135,7 +135,7 @@ const HomePage = () => {
       </div>
 
       {/* Совет — теперь расположен сразу после метрик */}
-      <Card className="mx-auto w-full max-w-lg bg-warning-yellow/40 backdrop-blur-md border-yellow-300/70 shadow-sm">
+      <Card className="mx-auto w-full max-w-lg bg-white/90 border border-yellow-200 shadow">
         <CardContent className="flex items-center gap-2 py-3 px-4">
           <Info className="text-orange-500" size={22} />
           <span className="font-medium text-orange-800">{mainAdvice}</span>
@@ -167,7 +167,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      <Card className="border-yellow-300 bg-warning-yellow/30 backdrop-blur-md">
+      <Card className="border-yellow-300 bg-white/90 shadow-lg">
         <CardHeader>
           <CardTitle className="text-orange-700">График бюджета</CardTitle>
           <CardDescription className="text-orange-600">Сравнение доходов и расходов за последние 3 месяца</CardDescription>
@@ -180,7 +180,7 @@ const HomePage = () => {
                   <CartesianGrid vertical={false} stroke="#FFD93D" />
                   <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#FF4757" fontSize={14} />
                   <Tooltip
-                    cursor={{ fill: "#FFD93D44" }}
+                    cursor={{ fill: "#FFD93D22" }}
                     formatter={(val: number) => `${val?.toLocaleString()}₽`}
                   />
                   <Legend
@@ -199,7 +199,7 @@ const HomePage = () => {
                   <CartesianGrid stroke="#FFD93D" vertical={false} />
                   <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#FF4757" fontSize={14} />
                   <Tooltip
-                    cursor={{ stroke: "#FF4757", strokeWidth: 2, opacity: 0.2 }}
+                    cursor={{ stroke: "#FF4757", strokeWidth: 2, opacity: 0.12 }}
                     formatter={(val: number) => `${val?.toLocaleString()}₽`}
                   />
                   <Legend
