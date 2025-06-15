@@ -88,15 +88,15 @@ const BudgetPage = () => {
   }));
 
   return (
-    <div className="p-4 space-y-6 animate-fade-in">
+    <div className="min-h-screen bg-white p-4 space-y-6 animate-fade-in">
       <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-glow">Бюджет и налоги</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-2xl font-bold text-black">Бюджет и налоги</h1>
+        <p className="text-base text-neutral-500">
           Обзор ваших финансовых обязательств и планирование.
         </p>
       </div>
-
-      <Card className="glass-card">
+      {/* Теперь glass-card всегда с белым и сильной тенью */}
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Calculator className="h-5 w-5 text-primary" />
@@ -142,7 +142,7 @@ const BudgetPage = () => {
       </Card>
 
       {/* Налоги */}
-      <Card className="glass-card">
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Landmark className="h-5 w-5 text-primary" />
@@ -176,7 +176,7 @@ const BudgetPage = () => {
       </Card>
 
       {/* Налоги на авто */}
-      <Card className="glass-card">
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Car className="h-5 w-5 text-primary" />
@@ -210,7 +210,7 @@ const BudgetPage = () => {
       </Card>
 
       {/* ЖКХ */}
-      <Card className="glass-card">
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Home className="h-5 w-5 text-primary" />
@@ -253,7 +253,7 @@ const BudgetPage = () => {
       </Card>
 
       {/* Месячные траты по категориям */}
-      <Card className="glass-card">
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Calculator className="h-5 w-5 text-primary" />
@@ -285,7 +285,7 @@ const BudgetPage = () => {
       </Card>
 
       {/* Совместные покупки с друзьями */}
-      <Card className="glass-card">
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <UsersRound className="h-5 w-5 text-primary" />
@@ -317,7 +317,7 @@ const BudgetPage = () => {
         </CardContent>
       </Card>
 
-      <Card className="glass-card">
+      <Card className="bg-white shadow-2xl rounded-3xl border border-gray-100">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Wallet className="h-5 w-5 text-primary" />

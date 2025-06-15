@@ -46,17 +46,17 @@ const GoalsPage = () => {
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="min-h-screen bg-white p-4 space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-glow">Твои денежные питомцы 🐾</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-3xl font-bold text-black">Твои денежные питомцы 🐾</h1>
+        <p className="text-base text-neutral-500">
           Корми их накоплениями и смотри, как они растут!
         </p>
       </div>
 
       <div className="flex justify-end">
-        <Button variant="outline" size="sm" onClick={completeAll}>
+        <Button variant="default" size="sm">
           ✅ Отметить всё как выполненное
         </Button>
       </div>
@@ -65,9 +65,11 @@ const GoalsPage = () => {
       <div className="grid grid-cols-1 gap-4">
         {goals.map((goal) => (
           <div key={goal.id} className={`${goal.completed ? "opacity-60 grayscale" : ""} relative group transition`}>
-            <PetGoal goal={goal} />
+            <div className="bg-white rounded-3xl shadow-lg p-3">
+              <PetGoal goal={goal} />
+            </div>
             <Button
-              variant={goal.completed ? "secondary" : "outline"}
+              variant="outline"
               size="sm"
               className="absolute top-2 right-2 animate-fade-in"
               onClick={() => toggleCompleted(goal.id)}
@@ -75,7 +77,7 @@ const GoalsPage = () => {
               {goal.completed ? "В процессе" : "Выполнена 🎉"}
             </Button>
             {goal.completed && (
-              <div className="absolute inset-0 bg-white/60 rounded-2xl flex items-center justify-center pointer-events-none text-lg font-bold text-cyber-purple group-hover:bg-white/80 transition">
+              <div className="absolute inset-0 bg-white/80 rounded-2xl flex items-center justify-center pointer-events-none text-lg font-bold text-cyber-purple group-hover:bg-white/90 transition">
                 Завершено!
               </div>
             )}
@@ -84,13 +86,13 @@ const GoalsPage = () => {
       </div>
 
       {/* Add New Goal */}
-      <div className="bg-gradient-to-r from-electric-blue to-cyber-purple p-4 rounded-2xl text-center">
+      <div className="bg-white shadow-md rounded-3xl p-4 text-center">
         <div className="text-4xl mb-2">➕</div>
-        <h3 className="text-white font-bold mb-1">Создать новую цель</h3>
-        <p className="text-white/80 text-xs mb-3">
+        <h3 className="text-black font-bold mb-1">Создать новую цель</h3>
+        <p className="text-neutral-500 text-xs mb-3">
           Начни выращивать нового денежного питомца!
         </p>
-        <Button className="bg-white text-cyber-purple px-4 py-2 rounded-xl font-medium text-sm hover:scale-105 transition-transform"
+        <Button className="bg-gradient-to-r from-orange-400 to-yellow-300 text-white px-4 py-2 rounded-xl font-medium text-base hover:scale-105 transition-transform"
           onClick={() => setAddModalOpen(true)}
         >
           Выбрать питомца
@@ -99,9 +101,9 @@ const GoalsPage = () => {
       <AddGoalModal open={addModalOpen} onOpenChange={setAddModalOpen} onAddGoal={handleAddGoal} />
 
       {/* Tips */}
-      <div className="bg-muted/50 p-4 rounded-2xl">
-        <h3 className="font-bold text-sm mb-2">💡 Лайфхаки</h3>
-        <ul className="text-xs text-muted-foreground space-y-1">
+      <div className="bg-neutral-50 p-4 rounded-2xl">
+        <h3 className="font-bold text-black mb-2">💡 Лайфхаки</h3>
+        <ul className="text-xs text-neutral-500 space-y-1">
           <li>• Перетаскивай деньги между целями для перераспределения</li>
           <li>• Питомцы эволюционируют быстрее при регулярном кормлении</li>
           <li>• Настрой автосохранение для ежедневного корма питомца</li>
