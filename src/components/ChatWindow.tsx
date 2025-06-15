@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { X, TrendingUp, TrendingDown, Goal, CircleDollarSign, PiggyBank, ChevronRight } from "lucide-react";
+import { X, TrendingUp, TrendingDown, Goal, CircleDollarSign, PiggyBank, ChevronRight, Mic } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Актуальные пользовательские цифры (синхронизированы)
@@ -170,15 +171,40 @@ const insights = [
 const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [selectedCategory, setSelectedCategory] = useState<null | string>(null);
   const [showExtra, setShowExtra] = useState(false);
+  // --- STATE для голосового ввода ---
+  const [isListening, setIsListening] = useState(false);
 
   const categoryData = categories.find((cat) => cat.category === selectedCategory);
+
+  // Имитация старта/остановки голосового ввода
+  const handleVoiceInput = () => {
+    setIsListening((prev) => !prev);
+    // Здесь в будущем может быть логика распознавания речи
+  };
 
   return (
     <Drawer open={isOpen} onOpenChange={open => !open && onClose()}>
       <DrawerContent className="h-[90vh] flex flex-col" onOpenAutoFocus={e => e.preventDefault()}>
         <DrawerHeader className="text-left flex-shrink-0">
           <div className="flex justify-between items-center">
-            <DrawerTitle>Финансовый помощник</DrawerTitle>
+            <div className="flex items-center gap-3">
+              <DrawerTitle>Финансовый помощник</DrawerTitle>
+              {/* Кнопка ввода голосом */}
+              <Button
+                variant="default"
+                size="icon"
+                aria-label={isListening ? "Остановить голосовой ввод" : "Ввести голосом"}
+                onClick={handleVoiceInput}
+                className={`transition shadow ${isListening
+                  ? "bg-orange-500 border-orange-600 animate-pulse"
+                  : "!bg-orange-400 border-orange-300"} text-white ml-2`}
+              >
+                <Mic className={isListening ? "animate-pulse" : ""} />
+              </Button>
+              {isListening && (
+                <span className="text-xs text-orange-600 ml-1 animate-pulse">Слушаю...</span>
+              )}
+            </div>
             <DrawerClose asChild>
               <Button variant="ghost" size="icon" onClick={onClose}>
                 <X className="h-4 w-4" />
@@ -271,3 +297,4 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
 };
 
 export default ChatWindow;
+
