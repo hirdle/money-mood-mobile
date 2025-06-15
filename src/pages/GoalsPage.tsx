@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { mockSavingsGoals } from '@/data/mockDataRu';
 import PetGoal from '@/components/PetGoal';
