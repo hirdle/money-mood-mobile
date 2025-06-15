@@ -28,26 +28,41 @@ const faqAnswers: { [key: string]: string } = {
 
 const GEMINI_API_KEY = "AIzaSyA9yfr1qm-LGmujIFifZwZ0JsQ3a3D9c8I";
 
+// Используем актуальный endpoint Gemini API v1beta и модель gemini-1.5-flash
+const GEMINI_MODEL = "gemini-1.5-flash"; // можно заменить на "gemini-1.5-pro" при необходимости
+
 const callGemini = async (question: string): Promise<string> => {
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    role: "user",
-                    parts: [{ text: question }]
-                }]
-            }),
-        });
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: question }]
+                    }]
+                }),
+            }
+        );
 
         if (!response.ok) {
-            throw new Error('Gemini API error');
+            // Попробуем вытащить ошибку из тела ответа
+            let errorText = '';
+            try {
+                const errData = await response.json();
+                errorText = errData?.error?.message || JSON.stringify(errData);
+            } catch {
+                errorText = await response.text();
+            }
+            throw new Error(`Gemini API error: ${response.status}: ${errorText}`);
         }
+
         const data = await response.json();
-        // Gemini's response structure: data.candidates[0].content.parts[0].text
+        // Проверяем структуру ответа для новой модели Gemini
         if (
             data &&
             Array.isArray(data.candidates) &&
@@ -56,10 +71,10 @@ const callGemini = async (question: string): Promise<string> => {
         ) {
             return data.candidates[0].content.parts[0].text;
         }
-        return "Ответ от AI не получен. Попробуйте позже.";
-    } catch (error) {
-        console.error("Error calling Gemini API:", error);
-        return "Извините, произошла ошибка при обращении к Gemini AI. Попробуйте позже.";
+        return "Ответ не получен от Gemini. Проверьте корректность ключа API и модели.";
+    } catch (error: any) {
+        console.error("Ошибка обращения к Gemini API:", error);
+        return `Извините, произошла ошибка при обращении к Gemini AI: ${error.message || error}. Попробуйте позже.`;
     }
 };
 
