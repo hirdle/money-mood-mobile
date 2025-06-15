@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import TabButton from '@/components/ui/TabButton';
 import ChatBubble from '@/components/ChatBubble';
 import HomePage from './HomePage';
@@ -24,11 +24,16 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [OnboardingComponent, setOnboardingComponent] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
     const passed = localStorage.getItem(ONBOARDING_STORAGE_KEY);
     if (!passed) {
       setShowOnboarding(true);
+      // Dynamically import onboarding page
+      import('./OnboardingPage').then(mod => {
+        setOnboardingComponent(() => mod.default);
+      });
     }
   }, []);
 
@@ -37,9 +42,15 @@ const Index = () => {
   }, [activeTab]);
 
   if (showOnboarding) {
-    // лениво импортируем чтобы избежать проблем с циклическим импортом
-    const OnboardingPage = require('./OnboardingPage').default;
-    return <OnboardingPage />;
+    if (OnboardingComponent) {
+      return <OnboardingComponent />;
+    }
+    // loader while waiting for onboarding page to load
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-lg text-gray-400">Загрузка…</div>
+      </div>
+    );
   }
 
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || HomePage;
@@ -76,3 +87,4 @@ const Index = () => {
 };
 
 export default Index;
+
