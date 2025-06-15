@@ -69,7 +69,7 @@ const HomePage = () => {
 
       {/* Витрина метрик */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <Card className="bg-gradient-to-br from-warning-yellow via-sunset-orange to-warning-yellow animate-scale-in border-none shadow-md">
+        <Card className="bg-warning-yellow/60 backdrop-blur-md border-none shadow-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-orange-900">
               <TrendingUp className="text-orange-600" size={22} />
@@ -89,7 +89,7 @@ const HomePage = () => {
             </span>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-sunset-orange via-warning-yellow to-warning-yellow animate-scale-in border-none shadow-md">
+        <Card className="bg-sunset-orange/40 backdrop-blur-md border-none shadow-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-yellow-900">
               <TrendingDown className="text-yellow-600" size={22} />
@@ -109,14 +109,16 @@ const HomePage = () => {
             </span>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-warning-yellow via-sunset-orange to-warning-yellow animate-scale-in border-none shadow-md">
+        <Card className="bg-warning-yellow/60 backdrop-blur-md border-none shadow-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-orange-500">
               <CircleDollarSign className="text-orange-400" size={22} />
               Сбережения
             </CardTitle>
             <CardDescription>
-              {dashboardMetrics.savings.toLocaleString()}₽ ({dashboardMetrics.savingsPercent}% от дохода)
+              <span className="text-orange-800">
+                {dashboardMetrics.savings.toLocaleString()}₽ ({dashboardMetrics.savingsPercent}% от дохода)
+              </span>
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -133,7 +135,7 @@ const HomePage = () => {
       </div>
 
       {/* Совет — теперь расположен сразу после метрик */}
-      <Card className="mx-auto w-full max-w-lg bg-warning-yellow/30 border-yellow-300/70 shadow-sm">
+      <Card className="mx-auto w-full max-w-lg bg-warning-yellow/40 backdrop-blur-md border-yellow-300/70 shadow-sm">
         <CardContent className="flex items-center gap-2 py-3 px-4">
           <Info className="text-orange-500" size={22} />
           <span className="font-medium text-orange-800">{mainAdvice}</span>
@@ -165,7 +167,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      <Card className="border-yellow-300 bg-warning-yellow/10">
+      <Card className="border-yellow-300 bg-warning-yellow/30 backdrop-blur-md">
         <CardHeader>
           <CardTitle className="text-orange-700">График бюджета</CardTitle>
           <CardDescription className="text-orange-600">Сравнение доходов и расходов за последние 3 месяца</CardDescription>
