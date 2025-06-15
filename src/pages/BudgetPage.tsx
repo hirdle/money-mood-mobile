@@ -34,12 +34,12 @@ const chartConfig = {
 } satisfies ChartConfig
 
 const monthlyCategories = [
-  { category: "Еда и продукты", amount: 18000 },
-  { category: "Транспорт", amount: 4500 },
-  { category: "ЖКХ", amount: 6200 },
-  { category: "Связь и интернет", amount: 1100 },
-  { category: "Развлечения", amount: 3500 },
-  { category: "Одежда и покупки", amount: 2700 },
+  { category: "Еда и продукты", amount: 18000, insight: "Планируйте покупки заранее и используйте скидки для экономии!" },
+  { category: "Транспорт", amount: 4500, insight: "Попробуйте общественный транспорт или совместные поездки для снижения трат." },
+  { category: "ЖКХ", amount: 6200, insight: "Следите за показаниями счётчиков и выбирайте оптимальные тарифы." },
+  { category: "Связь и интернет", amount: 1100, insight: "Проверьте неиспользуемые подписки и пакеты, перейдите на выгодный тариф." },
+  { category: "Развлечения", amount: 3500, insight: "Замените часть платных развлечений бесплатными активностями." },
+  { category: "Одежда и покупки", amount: 2700, insight: "Покупайте сезонную одежду на распродажах и берите только нужное!" },
 ];
 
 const sharedPurchases = [
@@ -258,7 +258,12 @@ const BudgetPage = () => {
             <TableBody>
               {monthlyCategories.map((item) => (
                 <TableRow key={item.category}>
-                  <TableCell>{item.category}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <span>{item.category}</span>
+                      <span className="text-xs text-orange-700 bg-orange-100 rounded px-2 py-1">{item.insight}</span>
+                    </div>
+                  </TableCell>
                   <TableCell className="text-right font-medium">{item.amount.toLocaleString()}₽</TableCell>
                 </TableRow>
               ))}

@@ -1,4 +1,3 @@
-
 import { mockNotifications } from '@/data/mockDataRu';
 import NotificationCard from '@/components/NotificationCard';
 
@@ -21,7 +20,7 @@ const NotificationsPage = () => {
         <div className="space-y-3">
           <h2 className="text-lg font-bold flex items-center gap-2">
             🔥 Горячие новости
-            <span className="bg-neon-pink text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-orange-400 text-white text-xs px-2 py-1 rounded-full">
               {newNotifications.length}
             </span>
           </h2>
@@ -40,25 +39,6 @@ const NotificationsPage = () => {
           ))}
         </div>
       )}
-
-      {/* Settings */}
-      <div className="bg-muted/50 p-4 rounded-2xl">
-        <h3 className="font-bold text-sm mb-2">⚙️ Настройки уведомлений</h3>
-        <div className="space-y-2 text-xs">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" defaultChecked className="rounded" />
-            <span>Уведомления о тратах</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" defaultChecked className="rounded" />
-            <span>Напоминания о целях</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" defaultChecked className="rounded" />
-            <span>Еженедельные вызовы</span>
-          </label>
-        </div>
-      </div>
     </div>
   );
 };
