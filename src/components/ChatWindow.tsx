@@ -1,8 +1,9 @@
 
 import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { X, TrendingUp, TrendingDown, Goal, CircleDollarSign, PiggyBank } from "lucide-react";
+import { X, TrendingUp, TrendingDown, Goal, CircleDollarSign, PiggyBank, ChevronRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Актуальные пользовательские цифры (синхронизированы)
@@ -12,7 +13,7 @@ const userStats = {
   savings: 14150,
   savingsPercent: 11, // (14150 / 125000 * 100)
   goal: 25000,
-  goalProgress: 57,    // Math.round(14150/25000*100)
+  goalProgress: 57,
 };
 
 // Универсальная подсказка для экономии
@@ -21,27 +22,68 @@ const economyAdvice =
     ? "Ваши расходы превышают доходы — это тревожный сигнал. Проверьте крупные траты, сокращайте подписки/лишние покупки!"
     : "Вы тратите меньше, чем зарабатываете — отличная привычка! Попробуйте наращивать долю сбережений.";
 
-// Тематические категории с детальным текстом и советами, БЕЗ КНОПОК
+// Дополнительные вложенные советы по категориям
+const extraTips = {
+  "Бюджет": [
+    "Планируйте бюджет на неделю вперед — это снижает неожиданные траты.",
+    "Пользуйтесь приложениями для учёта расходов для автоматизации контроля.",
+  ],
+  "Доходы": [
+    "Регулярно пересматривайте рынок труда — новые предложения появляются часто.",
+    "Осваивайте дополнительные навыки: это может повысить ваш доход.",
+  ],
+  "Расходы": [
+    "Устанавливайте лимиты на категории расходов.",
+    "Всегда проверяйте промо-акции и скидки перед покупками.",
+  ],
+  "Цели и сбережения": [
+    "Чтобы цель не откладывалась, поставьте автоплатёж на небольшую сумму.",
+    "Держите сбережения отдельно от повседневной карты.",
+  ],
+  "Графики и инсайты": [
+    "Ведите свой личный топ-3 трат за месяц — это поможет их осознать.",
+    "Задавайте вопросы ИИ для получения персонализированных советов.",
+  ],
+};
+
+// Часто задаваемые вопросы и быстрые ответы
+const faq = [
+  {
+    question: "Что делать, если не получается копить деньги?",
+    answer: "Начните с 5-10% дохода, увеличивайте долю постепенно. Переносите остатки недели в сбережения автоматически."
+  },
+  {
+    question: "Как сократить траты на еду?",
+    answer: "Планируйте меню, готовьте дома и покупайте только по списку. Используйте дисконтные карты и кэшбэк."
+  },
+  {
+    question: "Стоит ли инвестировать сразу?",
+    answer: "Сначала сформируйте подушку безопасности (3-6 месяцев расходов), затем — пробуйте простые инструменты (накопительный счёт, ОФЗ)."
+  },
+  {
+    question: "Как дисциплинировать себя не тратить лишнего?",
+    answer: "Используйте только наличные/лимитированную карту на траты. Отслеживайте расходы ежедневно в приложении."
+  },
+  {
+    question: "Как отслеживать прогресс по целям?",
+    answer: "Настройте регулярные уведомления/напоминания и записывайте изменения суммы накоплений раз в неделю/месяц."
+  },
+];
+
 const categories = [
   {
     category: "Бюджет",
     content: (
-      <div className="space-y-4">
-        <div className="bg-cyber-purple/10 p-4 rounded-xl">
-          <div className="flex items-center gap-3 mb-2">
-            <CircleDollarSign className="text-cyber-purple" size={28} />
-            <div>
-              <span className="text-xs text-cyber-purple/70">Ваш баланс за месяц</span>
-              <div className="text-xl font-bold text-cyber-purple">{userStats.savings.toLocaleString()}₽</div>
-            </div>
-          </div>
-          <div className="text-muted-foreground text-sm">
-            Доход: <span className="text-green-500 font-semibold">{userStats.income.toLocaleString()}₽</span> &nbsp;|&nbsp; 
-            Расход: <span className="text-red-500 font-semibold">{userStats.expenses.toLocaleString()}₽</span>
+      <div className="space-y-3">
+        <div className="bg-orange-100 p-4 rounded-xl flex items-center gap-3">
+          <CircleDollarSign className="text-orange-500" size={26} />
+          <div>
+            <span className="text-xs text-orange-500/70">Ваш баланс за месяц</span>
+            <div className="text-xl font-bold text-orange-500">{userStats.savings.toLocaleString()}₽</div>
           </div>
         </div>
-        <div>Общий баланс показывает разницу между вашими доходами и расходами за месяц. Если «в плюсе»— финансовая подушка крепнет и стресс снижается!</div>
-        <div className="bg-gradient-to-r from-green-50 to-purple-50/60 rounded-xl p-3 shadow-sm">
+        <div>Общий баланс показывает разницу между вашими доходами и расходами за месяц. Если «в плюсе» — финансовая подушка крепнет и стресс снижается!</div>
+        <div className="bg-gradient-to-r from-orange-200 to-yellow-100 rounded-xl p-3 shadow-sm">
           <b>Совет:</b> Старайтесь, чтобы остаток всегда был не меньше <span className="font-semibold">10-20%</span> дохода — это ваш запас прочности.
         </div>
       </div>
@@ -50,17 +92,17 @@ const categories = [
   {
     category: "Доходы",
     content: (
-      <div className="space-y-4">
-        <div className="bg-green-100 p-4 rounded-xl flex items-center gap-4">
-          <TrendingUp className="text-green-500" size={28} />
+      <div className="space-y-3">
+        <div className="bg-orange-100 p-4 rounded-xl flex items-center gap-4">
+          <TrendingUp className="text-orange-500" size={26} />
           <div>
-            <div className="text-xs text-green-700 mb-1">Ваш доход за месяц:</div>
-            <div className="text-xl font-bold text-green-700">{userStats.income.toLocaleString()}₽</div>
+            <div className="text-xs text-orange-700 mb-1">Ваш доход за месяц:</div>
+            <div className="text-xl font-bold text-orange-700">{userStats.income.toLocaleString()}₽</div>
           </div>
         </div>
-        <div>Доходы считаются по всем поступлениям за месяц (зарплата, фриланс, премии и т.д). Следите за динамикой: если доход растёт — часть отправляйте в сбережения или на цели.</div>
-        <div className="bg-green-50 p-3 rounded-xl text-sm">
-          <b>Совет:</b> Старайтесь откладывать хотя бы <span className="font-semibold">20%</span> с любого дохода — это ускорит достижение целей и повысит устойчивость.
+        <div>Доходы считаются по всем поступлениям за месяц. Если доход растёт — увеличьте размер сбережений или попробуйте реализовать дополнительный источник дохода.</div>
+        <div className="bg-orange-50 p-3 rounded-xl text-sm">
+          <b>Совет:</b> Откладывайте <span className="font-semibold">20%</span> с любого дохода — так путь к финансовым целям станет короче!
         </div>
       </div>
     ),
@@ -68,17 +110,17 @@ const categories = [
   {
     category: "Расходы",
     content: (
-      <div className="space-y-4">
-        <div className="bg-red-100 p-4 rounded-xl flex items-center gap-4">
-          <TrendingDown className="text-red-500" size={28} />
+      <div className="space-y-3">
+        <div className="bg-orange-100 p-4 rounded-xl flex items-center gap-4">
+          <TrendingDown className="text-orange-500" size={26} />
           <div>
-            <div className="text-xs text-red-600 mb-1">Ваши расходы за месяц:</div>
-            <div className="text-xl font-bold text-red-600">{userStats.expenses.toLocaleString()}₽</div>
+            <div className="text-xs text-orange-700 mb-1">Расходы за месяц:</div>
+            <div className="text-xl font-bold text-orange-700">{userStats.expenses.toLocaleString()}₽</div>
           </div>
         </div>
-        <div>Обычно больше всего уходит на еду, развлечения и подписки. Проверьте эти разделы — если тратите больше <span className="font-semibold">{Math.round(userStats.income * .15).toLocaleString()}₽</span> в месяц на что-то одно, можно подумать об оптимизации.</div>
-        <div className="bg-red-50 p-3 rounded-xl text-sm">
-          <b>Совет:</b> Готовьте дома, откажитесь от лишней подписки, сверяйте скидки. {economyAdvice}
+        <div>Проверьте: на что уходит больше всего? Лимитируйте подписки и импульсивные покупки.</div>
+        <div className="bg-orange-50 p-3 rounded-xl text-sm">
+          <b>Совет:</b> Используйте приложения для трекинга. {economyAdvice}
         </div>
       </div>
     ),
@@ -86,18 +128,17 @@ const categories = [
   {
     category: "Цели и сбережения",
     content: (
-      <div className="space-y-4">
-        <div className="bg-emerald-100 p-4 rounded-xl flex items-center gap-4">
-          <PiggyBank className="text-emerald-500" size={28} />
+      <div className="space-y-3">
+        <div className="bg-orange-100 p-4 rounded-xl flex items-center gap-4">
+          <PiggyBank className="text-orange-500" size={26} />
           <div>
-            <div className="text-xs mb-1">Сбережено:</div>
-            <div className="text-xl font-bold text-emerald-600">{userStats.savings.toLocaleString()}₽</div>
+            <div className="text-xs mb-1 text-orange-700">Сбережено:</div>
+            <div className="text-xl font-bold text-orange-700">{userStats.savings.toLocaleString()}₽</div>
           </div>
         </div>
         <div>Ваша краткосрочная цель: <b>{userStats.goal.toLocaleString()}₽</b>.<br /> Прогресс: <span className="font-semibold">{userStats.goalProgress}%</span></div>
-        <div>Рекомендуется иметь финансовую подушку минимум на 3 месяца трат — для вас это <span className="font-semibold">{(userStats.expenses*3).toLocaleString()}₽</span>.</div>
-        <div className="bg-emerald-50 p-3 rounded-xl text-sm">
-          <b>Совет:</b> Пополняйте цель хоть небольшой суммой каждую неделю. Автопереводы и переводы остатка после покупок помогают быстрее накопить!
+        <div className="bg-orange-50 p-3 rounded-xl text-sm">
+          <b>Совет:</b> Маленькие и регулярные пополнения — залог того, что цель не будет "миражом".
         </div>
       </div>
     ),
@@ -105,16 +146,16 @@ const categories = [
   {
     category: "Графики и инсайты",
     content: (
-      <div className="space-y-4">
-        <div className="bg-sky-100 p-4 rounded-xl mb-2">
+      <div className="space-y-3">
+        <div className="bg-orange-100 p-3 rounded-xl mb-2">
           <div className="font-semibold mb-1">График бюджета</div>
-          <div className="text-sm text-cyber-purple">
-            Сравните доходы и расходы за 3 месяца на графике — это поможет понять тренды и вовремя скорректировать стратегию.
+          <div className="text-sm text-orange-500">
+            В разделе «Бюджет» проверьте динамику за 3 месяца и найдите, куда уходят основные суммы.
           </div>
         </div>
-        <div>В разделе «Инсайты» появляются персональные советы, основанные на ваших действиях. Если увидели 🔥 — обязательно ознакомьтесь!</div>
-        <div className="bg-gradient-to-r from-cyber-purple/10 to-sky-50 rounded-xl p-3 shadow-sm">
-          <b>Совет:</b> Проверяйте инсайты каждую неделю — это поможет не упустить новые возможности для экономии и накоплений.
+        <div>В разделе «Инсайты» появляются персональные советы, основанные на ваших действиях.</div>
+        <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-xl p-3 shadow-sm">
+          <b>Совет:</b> Проверяйте инсайты каждую неделю — это путь к дополнительной экономии!
         </div>
       </div>
     ),
@@ -122,15 +163,15 @@ const categories = [
 ];
 
 const insights = [
-  "Откладывайте не менее 20% дохода на финансовую подушку.",
-  "Внимательно следите за категориями «Еда» и «Развлечения» — здесь чаще всего можно сэкономить.",
-  "Регулярно проверяйте свои подписки: иногда маленькие расходы незаметно становятся большими!",
+  "Откладывайте минимум 20% дохода — даже если сумма кажется маленькой.",
+  "Категории «Еда» и «Развлечения» — часто драйвер лишних трат.",
+  "Периодически проверяйте подписки, чтобы не платить за ненужное.",
 ];
 
 const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [selectedCategory, setSelectedCategory] = useState<null | string>(null);
+  const [showExtra, setShowExtra] = useState(false);
 
-  // Получаем выбранную категорию
   const categoryData = categories.find((cat) => cat.category === selectedCategory);
 
   return (
@@ -146,44 +187,80 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
             </DrawerClose>
           </div>
           <DrawerDescription>
-            Готовые разборы по бюджету, доходам, расходам, целям и лайфхаки!
+            Быстрые разборы, советы и ответы на частые вопросы по личным финансам
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="flex-grow px-4">
-          <div className="space-y-5 my-6">
+          <div className="space-y-6 my-6">
             {!selectedCategory ? (
               <div>
                 <div className="mb-3 text-base font-semibold">Выберите интересующую тему:</div>
                 <div className="grid gap-3">
                   {categories.map((cat) => (
-                    <div
+                    <Button
                       key={cat.category}
-                      className="cursor-pointer bg-muted p-4 rounded-2xl shadow hover:bg-cyber-purple/10 transition group"
-                      onClick={() => setSelectedCategory(cat.category)}
+                      className="w-full !bg-orange-400 !text-white !rounded-xl font-bold shadow hover:scale-105 transition flex justify-between items-center"
+                      onClick={() => {
+                        setSelectedCategory(cat.category);
+                        setShowExtra(false);
+                      }}
                     >
-                      <span className="text-cyber-purple font-bold text-base group-hover:underline">{cat.category}</span>
-                      <div className="text-xs text-muted-foreground mt-1 opacity-70">Подробнее</div>
-                    </div>
+                      <span>{cat.category}</span>
+                      <ChevronRight size={20} />
+                    </Button>
                   ))}
                 </div>
+
+                {/* Советы недели */}
                 <div className="mt-8">
-                  <div className="font-bold text-cyber-purple mb-2">Инсайты и советы недели</div>
+                  <div className="font-bold text-orange-500 mb-2">Инсайты и советы недели</div>
                   <ul className="list-disc ml-5 space-y-2">
                     {insights.map((tip, idx) => (
-                      <li key={idx} className="bg-cyber-purple/10 rounded-md px-3 py-2">{tip}</li>
+                      <li key={idx} className="bg-orange-100 rounded-md px-3 py-2">{tip}</li>
                     ))}
                   </ul>
+                </div>
+
+                {/* FAQ блог */}
+                <div className="mt-10">
+                  <div className="font-bold text-orange-500 mb-2">Часто задаваемые вопросы</div>
+                  <Accordion type="single" collapsible className="w-full">
+                    {faq.map((item, i) => (
+                      <AccordionItem key={i} value={"faq" + i}>
+                        <AccordionTrigger className="text-base font-semibold">{item.question}</AccordionTrigger>
+                        <AccordionContent className="text-sm">{item.answer}</AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
                 </div>
               </div>
             ) : (
               <div>
-                <div className="mb-3 text-muted-foreground text-xs cursor-pointer" onClick={() => setSelectedCategory(null)}>
+                <div className="mb-3 text-muted-foreground text-xs cursor-pointer inline-block" onClick={() => setSelectedCategory(null)}>
                   ← Назад к темам
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-cyber-purple mb-4">{selectedCategory}</div>
+                  <div className="text-lg font-bold text-orange-500 mb-4">{selectedCategory}</div>
                   {categoryData?.content}
                 </div>
+                {/* Вложенные советы */}
+                {selectedCategory && extraTips[selectedCategory]?.length > 0 && (
+                  <div className="mt-5">
+                    <Button
+                      onClick={() => setShowExtra(!showExtra)}
+                      className="w-full !bg-orange-300 !text-white rounded-xl font-semibold text-sm shadow mb-2"
+                    >
+                      {showExtra ? "Скрыть дополнительные советы" : "Показать дополнительные советы"}
+                    </Button>
+                    <div className={showExtra ? "block" : "hidden"}>
+                      <ul className="list-disc ml-5 space-y-2">
+                        {extraTips[selectedCategory].map((tip, idx) => (
+                          <li key={idx} className="bg-orange-100 rounded-md px-3 py-2 text-sm">{tip}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
