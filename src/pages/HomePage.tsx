@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
@@ -52,11 +51,6 @@ const financialAdvice = [
   "Проверяйте подписки: маленькие суммы незаметно становятся большими!",
 ];
 
-const petInitials = [
-  { emoji: "🦊", label: "Фокс", amount: "+2 000₽", positive: true },
-  { emoji: "🦁", label: "Лев", amount: "+10 000₽", positive: true }
-];
-
 const storyData = [
   { emoji: "🍔", title: "Еда", color: "bg-yellow-200" },
   { emoji: "🎁", title: "Подарок", color: "bg-orange-200" },
@@ -65,25 +59,12 @@ const storyData = [
 ];
 
 export default function HomePage() {
-  // История питомцев: каждый новый добавляется в начало массива
-  const [pets, setPets] = useState([...petInitials]);
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
-
-  // Добавить нового питомца (доход)
-  const addIncomePet = () => {
-    setPets([{ emoji: "🐯", label: "Тигр", amount: "+5 000₽", positive: true }, ...pets]);
-  };
-  // Добавить нового питомца (расход)
-  const addExpensePet = () => {
-    setPets([{ emoji: "🐭", label: "Мышь", amount: "-1 500₽", positive: false }, ...pets]);
-  };
-
-  // Основной совет
   const mainAdvice = financialAdvice[0];
 
   return (
     <div className="p-2 sm:p-6 flex flex-col gap-6 max-w-2xl mx-auto">
-      {/* STORIES: ВЕРХНИЙ БЛОК */}
+      {/* Stories-стайл "инстаграм": отключены */}
       <div className="flex gap-4 overflow-x-auto pb-2 pt-1">
         {storyData.map((s, i) => (
           <div
@@ -104,45 +85,59 @@ export default function HomePage() {
           </div>
         ))}
       </div>
-
-      {/* "Питомцы" — список операций ДОХОД и РАСХОД */}
-      <div className="space-y-2">
-        {pets.map((pet, idx) => (
-          <div
-            key={idx}
-            className={cn(
-              "flex items-center gap-3 rounded-xl shadow-sm border border-orange-200 bg-gradient-to-r",
-              pet.positive
-                ? "from-orange-100 via-yellow-50 to-white"
-                : "from-orange-50 to-yellow-100",
-              "px-4 py-3 animate-fade-in"
-            )}
-          >
-            <span className="text-2xl">{pet.emoji}</span>
-            <span className="font-semibold">{pet.label}</span>
-            <span className={cn("ml-auto font-bold", pet.positive ? "text-orange-600" : "text-red-500")}>
-              {pet.amount}
-            </span>
+      {/* Дашборд карточки с метриками */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-0 mb-2">
+        <Card className="border-0 bg-gradient-to-br from-orange-400 via-yellow-200 to-white shadow-md">
+          <CardHeader>
+            <CardTitle className="text-orange-800">Доход</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-extrabold text-orange-700">{dashboardMetrics.income.toLocaleString()}₽</div>
+            <div className={cn(
+              "flex items-center text-sm mt-1",
+              incomeDelta.up ? "text-green-700" : "text-red-600"
+            )}>
+              {incomeDelta.up ? "▲" : "▼"} {incomeDelta.percent}%
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-0 bg-gradient-to-br from-orange-200 via-yellow-50 to-white shadow-md">
+          <CardHeader>
+            <CardTitle className="text-orange-600">Расходы</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-extrabold text-orange-500">{dashboardMetrics.expenses.toLocaleString()}₽</div>
+            <div className={cn(
+              "flex items-center text-sm mt-1",
+              expensesDelta.up ? "text-red-600" : "text-green-700"
+            )}>
+              {expensesDelta.up ? "▲" : "▼"} {expensesDelta.percent}%
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-0 bg-gradient-to-br from-yellow-400 via-orange-100 to-white shadow-md">
+          <CardHeader>
+            <CardTitle className="text-yellow-700">Сбережения</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-extrabold text-yellow-700">{dashboardMetrics.savings.toLocaleString()}₽</div>
+            <div className="text-sm mt-1 text-yellow-800">{dashboardMetrics.savingsPercent}% от дохода</div>
+          </CardContent>
+        </Card>
+      </div>
+      {/* Прогресс до цели */}
+      <Card className="border-orange-200 shadow bg-white">
+        <CardHeader>
+          <CardTitle className="text-orange-700 font-bold">Прогресс к финансовой цели</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-3 mb-2">
+            <Progress value={progressValue} className="w-full h-3 bg-yellow-100 progress-bar-orange" />
+            <span className="ml-2 font-semibold text-orange-700">{progressValue}%</span>
           </div>
-        ))}
-      </div>
-
-      {/* Кнопки добавления */}
-      <div className="flex gap-4 justify-center mt-2 mb-2">
-        <Button
-          className="hover-scale rounded-lg px-5 py-2 font-bold bg-gradient-to-r from-orange-400 to-yellow-300 text-white shadow"
-          onClick={addIncomePet}
-        >
-          + Доход
-        </Button>
-        <Button
-          className="hover-scale rounded-lg px-5 py-2 font-bold bg-gradient-to-r from-yellow-500 to-orange-400 text-white shadow"
-          onClick={addExpensePet}
-        >
-          + Расход
-        </Button>
-      </div>
-
+          <div className="text-xs text-orange-500">Цель: {monthlyGoal.toLocaleString()}₽</div>
+        </CardContent>
+      </Card>
       {/* График бюджета с выбором типа */}
       <div className="flex justify-center mb-2">
         <div className="inline-flex bg-orange-100 rounded-lg p-1 gap-2 shadow">
@@ -219,7 +214,7 @@ export default function HomePage() {
           </div>
         </CardContent>
       </Card>
-      {/* Совет эксперта — ВНИЗ */}
+      {/* Совет эксперта — внизу */}
       <Card className="mx-auto w-full max-w-lg bg-orange-50 border-orange-200 shadow-md">
         <CardContent className="flex items-center gap-2 py-3">
           <Info className="text-orange-400" size={22} />
