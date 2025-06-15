@@ -26,6 +26,43 @@ const faqAnswers: { [key: string]: string } = {
     "Расскажи про инвестиции для новичков": "Начните с изучения основ: облигации федерального займа (ОФЗ) - самый безопасный инструмент, ETF на широкий рынок для диверсификации, постепенно изучайте отдельные акции. Инвестируйте регулярно небольшими суммами, не вкладывайте все сбережения сразу."
 };
 
+const GEMINI_API_KEY = "AIzaSyA9yfr1qm-LGmujIFifZwZ0JsQ3a3D9c8I";
+
+const callGemini = async (question: string): Promise<string> => {
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    role: "user",
+                    parts: [{ text: question }]
+                }]
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Gemini API error');
+        }
+        const data = await response.json();
+        // Gemini's response structure: data.candidates[0].content.parts[0].text
+        if (
+            data &&
+            Array.isArray(data.candidates) &&
+            data.candidates[0]?.content?.parts &&
+            data.candidates[0].content.parts[0]?.text
+        ) {
+            return data.candidates[0].content.parts[0].text;
+        }
+        return "Ответ от AI не получен. Попробуйте позже.";
+    } catch (error) {
+        console.error("Error calling Gemini API:", error);
+        return "Извините, произошла ошибка при обращении к Gemini AI. Попробуйте позже.";
+    }
+};
+
 const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
     const [messages, setMessages] = useState<Message[]>([
         { text: "Здравствуйте! Я ваш финансовый помощник. Чем могу помочь?", isUser: false }
@@ -41,39 +78,6 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
     useEffect(() => {
         scrollToBottom();
     }, [messages, isWaitingForResponse]);
-
-    const callOpenAI = async (question: string): Promise<string> => {
-        try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
-                    messages: [
-                        { 
-                            role: 'system', 
-                            content: 'Ты финансовый консультант. Отвечай кратко и по делу на русском языке. Давай практические советы по личным финансам, бюджетированию, инвестициям и налогам для жителей России.' 
-                        },
-                        { role: 'user', content: question }
-                    ],
-                    max_tokens: 500,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('OpenAI API error');
-            }
-
-            const data = await response.json();
-            return data.choices[0].message.content;
-        } catch (error) {
-            console.error("Error calling OpenAI API:", error);
-            return "Извините, произошла ошибка при обращении к AI. Попробуйте позже.";
-        }
-    };
 
     const handleSendMessage = async (text: string) => {
         if (!text.trim()) return;
@@ -91,14 +95,14 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
                 setIsWaitingForResponse(false);
             }, 1000);
         } else {
-            // Call OpenAI for other questions
-            const response = await callOpenAI(text);
+            // Use Gemini instead of OpenAI!
+            const response = await callGemini(text);
             const botMessage: Message = { text: response, isUser: false };
             setMessages(prev => [...prev, botMessage]);
             setIsWaitingForResponse(false);
         }
     };
-    
+
     return (
         <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DrawerContent className="h-[90vh] flex flex-col" onOpenAutoFocus={(e) => e.preventDefault()}>
@@ -154,3 +158,4 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
 };
 
 export default ChatWindow;
+
