@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -6,8 +5,66 @@ import { X } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+// Получаем актуальные цифры из дашборда (синхронизировано!)
+const userStats = {
+  income: 125000,
+  expenses: 110850,
+  savings: 14150,
+  savingsPercent: 11, // savings / income * 100 = (14150/125000) ≈ 11%
+  goal: 25000,
+  goalProgress: 57,   // Math.round(14150/25000*100) = 57%
+};
+
 // Категории -> вопросы -> ответы
 const analyticsQa = [
+  {
+    category: "Аналитика по вашим цифрам",
+    questions: [
+      {
+        question: "Ваши основные финансовые результаты за месяц",
+        answer: (
+          <div>
+            <ul className="mb-2 space-y-1">
+              <li><b>Доход:</b> {userStats.income.toLocaleString()}₽</li>
+              <li><b>Расходы:</b> {userStats.expenses.toLocaleString()}₽</li>
+              <li><b>Сбережения:</b> {userStats.savings.toLocaleString()}₽ ({userStats.savingsPercent}% от дохода)</li>
+              <li><b>Прогресс к цели:</b> {userStats.goalProgress}% (Цель: {userStats.goal.toLocaleString()}₽)</li>
+            </ul>
+            <div className="font-semibold mb-1">Советы по этим цифрам:</div>
+            <ul className="list-disc pl-5 text-sm text-muted-foreground">
+              <li>
+                {userStats.expenses > userStats.income
+                  ? "Расходы превышают доходы — пересмотрите крупные траты, сократите ненужные подписки и планируйте покупки заранее."
+                  : "Вы тратите меньше, чем зарабатываете — отличная привычка! Попробуйте увеличить долю сбережений для формирования финансовой подушки."}
+              </li>
+              <li>
+                {userStats.savingsPercent < 20
+                  ? "Рекомендуется откладывать не менее 20% дохода на резерв/цели. Попробуйте сразу переводить сумму на накопительный счет после поступления дохода."
+                  : "Вы грамотно управляете накоплениями! Поддерживайте эту дисциплину для финансовой устойчивости."}
+              </li>
+              <li>
+                {userStats.goalProgress < 50
+                  ? "До достижения финансовой цели ещё далеко. Направьте часть малозаметных трат (кофе, фастфуд) на пополнение цели — увидите прогресс быстрее."
+                  : userStats.goalProgress < 100
+                    ? "Вы прошли больше половины пути к цели! Не останавливайтесь, регулярные небольшие взносы дадут отличный результат."
+                    : "Поздравляем, цель достигнута! Самое время поставить новую цель для ещё большего роста."}
+              </li>
+            </ul>
+          </div>
+        ),
+      },
+      {
+        question: "Рассчитать, сколько можно ещё потратить до конца месяца?",
+        answer:
+          `У вас осталось ${(userStats.income - userStats.expenses).toLocaleString()}₽ до лимита расходов в этом месяце. Рекомендуется не тратить всё до нуля — часть суммы лучше перевести в сбережения для следующего месяца или на случай непредвиденных ситуаций.`,
+      },
+      {
+        question: "На чем сейчас лучше сэкономить?",
+        answer:
+          "Больше всего денег обычно уходит на категории: еда вне дома, развлечения и подписки. Проверьте раздел бюджета: если траты по этим категориям >15% от дохода — там больше всего возможностей для оптимизации. Например, попробуйте готовить дома или отменить редко используемые сервисы.",
+      },
+    ],
+  },
   {
     category: "Бюджет",
     questions: [
@@ -131,9 +188,9 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
   if (!selectedCategory) {
     currentNode = (
       <div>
-        <div className="mb-4 text-base font-semibold">Выберите тему:</div>
+        <div className="mb-4 text-base font-semibold">Выберите раздел аналитики:</div>
         <div className="flex flex-wrap gap-2">
-          {analyticsQa.map((cat, i) => (
+          {analyticsQa.map((cat) => (
             <Button
               key={cat.category}
               variant="outline"
@@ -156,12 +213,12 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
         <div className="space-y-2">
           {category.questions.map((q, idx) => (
             <Button
-              key={q.question}
+              key={typeof q.question === "string" ? q.question : idx}
               variant="ghost"
               onClick={() => setSelectedQuestionIdx(idx)}
               className="w-full justify-start whitespace-normal"
             >
-              {q.question}
+              {typeof q.question === "string" ? q.question : `Вопрос #${idx+1}`}
             </Button>
           ))}
         </div>
@@ -173,8 +230,14 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
     currentNode = (
       <div>
         <div className="mb-1 text-xs text-muted-foreground">Тема: {selectedCategory}</div>
-        <div className="mb-2 font-bold">{qobj.question}</div>
-        <div className="bg-muted rounded-xl p-3 mb-4 text-base">{qobj.answer}</div>
+        <div className="mb-2 font-bold">
+          {typeof qobj.question === "string" ? qobj.question : "[Вопрос]"}
+        </div>
+        <div className="bg-muted rounded-xl p-3 mb-4 text-base">
+          {typeof qobj.answer === "string"
+            ? qobj.answer
+            : qobj.answer /* ReactNode для цифр и советов */}
+        </div>
         <div className="flex gap-2 flex-wrap">
           <Button
             variant="secondary"
@@ -225,4 +288,3 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void;
 };
 
 export default ChatWindow;
-
