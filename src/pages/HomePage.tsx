@@ -45,7 +45,7 @@ const HomePage = () => {
     <div className="min-h-screen bg-white p-0">
       {/* Приветствие */}
       <div className="pt-10 pb-3 text-center space-y-1">
-        <h1 className="text-4xl font-bold text-black" style={{letterSpacing: -1.2}}>Привет, Илья!</h1>
+        <h1 className="text-4xl font-bold text-black" style={{ letterSpacing: -1.2 }}>Привет, Илья!</h1>
       </div>
       {/* Истории — выравниваем по центру */}
       <div className="flex justify-center w-full mb-3">
@@ -54,11 +54,19 @@ const HomePage = () => {
             <div className="bg-white rounded-3xl shadow-2xl px-5 py-4 flex flex-col items-center w-full gap-3">
               <span className="text-xl font-semibold text-black mb-3 text-center">Истории</span>
               <div className="flex gap-8 justify-center items-center mt-1 mb-1">
-                <div className="w-20 h-20 rounded-full border-4 border-[#12C10A] flex items-center justify-center overflow-hidden bg-white shadow-md">
-                  <div className="w-14 h-14 bg-[#f3f4f6] rounded-full flex items-center justify-center font-bold text-2xl text-[#12C10A]">₽</div>
+                <div className="w-24 h-24 rounded-full border-4 border-[#12C10A] flex items-center justify-center overflow-hidden bg-white shadow-md">
+                  <img
+                    src="/lovable-uploads/f3f2355c-1a82-499b-b8c2-71c4b5a829df.png"
+                    alt="Tax Calculator"
+                    className="w-20 h-20 object-contain"
+                  />
                 </div>
-                <div className="w-20 h-20 rounded-full border-4 border-orange-400 flex items-center justify-center overflow-hidden bg-white shadow-md">
-                  <div className="w-14 h-14 bg-[#f3f4f6] rounded-full flex items-center justify-center font-bold text-2xl text-orange-500">💵</div>
+                <div className="w-24 h-24 rounded-full border-4 border-orange-400 flex items-center justify-center overflow-hidden bg-white shadow-md">
+                  <img
+                    src="/lovable-uploads/72cafdd4-f9d6-46c3-aa8c-f289c078ab34.png"
+                    alt="Finance Chart"
+                    className="w-20 h-20 object-contain"
+                  />
                 </div>
               </div>
             </div>
@@ -67,7 +75,7 @@ const HomePage = () => {
           {/* Совет дня */}
           <div className="w-full bg-white rounded-3xl shadow-2xl px-5 py-5 flex flex-col gap-1 mt-5">
             <span className="text-xl font-semibold text-black mb-1">Совет дня</span>
-            <span className="mt-1 text-[22px] font-bold text-[#11AB0B] leading-tight" style={{lineHeight: "1.15"}}>
+            <span className="mt-1 text-[22px] font-bold text-[#11AB0B] leading-tight" style={{ lineHeight: "1.15" }}>
               Отмени подписки на кинотеатры и сэкономишь 10+ тыс. рублей
             </span>
           </div>
@@ -128,4 +136,5 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;
