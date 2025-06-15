@@ -1,175 +1,227 @@
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Send, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-interface Message {
-  text: string;
-  isUser: boolean;
-}
-
-const faqs = [
-    "Как составить бюджет?",
-    "Как уменьшить налоги?",
-    "Какие есть способы накопления?",
-    "Расскажи про инвестиции для новичков"
+// Категории -> вопросы -> ответы
+const analyticsQa = [
+  {
+    category: "Бюджет",
+    questions: [
+      {
+        question: "Что отображает блок общего баланса?",
+        answer:
+          "Блок 'Общий баланс' на главной странице показывает разницу между вашими доходами и расходами за последний месяц. Если доходы превышают расходы, вы в плюсе, если наоборот — в минусе. Это главный показатель вашей финансовой стабильности.",
+      },
+      {
+        question: "Как рассчитывается 'Прогресс к цели'?",
+        answer:
+          "Прогресс рассчитывается как процент ваших сбережений (доходы минус расходы) от заданной финансовой цели на месяц. Например, если цель накопить 25 000₽, а вы сберегли 14 150₽, прогресс — 57%.",
+      },
+      {
+        question: "Почему важен анализ бюджета по месяцам?",
+        answer:
+          "Посмотрев как меняются доходы и расходы по месяцам, вы заметите тренды (рост, снижение, стабильность) и сможете вовремя принимать решения: где экономить, куда выгодно направить лишние средства и как наращивать накопления.",
+      }
+    ],
+  },
+  {
+    category: "Доходы",
+    questions: [
+      {
+        question: "Как отображаются доходы?",
+        answer:
+          "Доходы выводятся в разделе 'Доходы' и на графике «Бюджет». Везде используются актуальные числа по месяцам. Можно увидеть изменение доходов (рост/падение в процентах относительно прошлого месяца) для отслеживания динамики.",
+      },
+      {
+        question: "Что делать если доход уменьшился?",
+        answer:
+          "Если доход снизился — пересмотрите обязательные траты, урежьте второстепенные расходы и найдите временные подработки/источники дохода. Всегда держите финансовую подушку (не менее 20% ежемесячного дохода).",
+      },
+      {
+        question: "Как можно увеличить доход?",
+        answer:
+          "Рассмотрите вакансии с подработкой, обучение новым навыкам (онлайн-курсы), прокачку профессиональных компетенций для карьерного роста. Сдавайте квартирантам свободную комнату или монетизируйте хобби.",
+      },
+    ],
+  },
+  {
+    category: "Расходы",
+    questions: [
+      {
+        question: "Как снизить расходы?",
+        answer:
+          "Проанализируйте все траты из раздела 'Расходы'. Часто больше всего уходит на еду вне дома, подписки, транспорт, рестораны. Уберите лишние подписки, готовьте дома, ищите скидки и акции. Запланируйте крупные расходы заранее.",
+      },
+      {
+        question: "Почему перерасход — это опасно?",
+        answer:
+          "Если расходы превышают доходы, копится долг. Это снижает вашу финансовую устойчивость и увеличивает стресс — важно как можно раньше увидеть такие тенденции и скорректировать бюджет.",
+      },
+      {
+        question: "Как вести учёт расходов эффективно?",
+        answer:
+          "Пользуйтесь встроенной аналитикой приложения — она помогает автоматически сравнивать траты в разных категориях и советует, где можно сэкономить.",
+      },
+    ],
+  },
+  {
+    category: "Цели и сбережения",
+    questions: [
+      {
+        question: "Для чего заводить денежные цели?",
+        answer:
+          "Финансовые цели (питомцы) накапливают деньги на важные желания: отпуск, техника, страховка, резерв на чёрный день. Это мотивирует регулярно откладывать и соблюдать финансовую дисциплину.",
+      },
+      {
+        question: "Какая сумма должна быть в сбережениях?",
+        answer:
+          "Наиболее безопасно — держать резерв в размере не меньше 3 месячных расходов (например, ваши траты 100 000₽ в месяц, значит, резерв — минимум 300 000₽).",
+      },
+      {
+        question: "Как ускорить накопление на цель?",
+        answer:
+          "Отложите небольшую сумму сразу после получения дохода, используйте автоматические переводы, откажитесь от пары импульсивных покупок. Помните: частое пополнение, даже маленькими суммами, работает лучше крупных, но редких взносов.",
+      },
+    ],
+  },
+  {
+    category: "Графики и инсайты",
+    questions: [
+      {
+        question: "Что показывает график бюджета?",
+        answer:
+          "График на главной иллюстрирует соотношение доходов и расходов за 3 последних месяца. По нему легко обнаружить неожиданные скачки расходов или доходов и своевременно отреагировать.",
+      },
+      {
+        question: "Как пользоваться разделом 'Инсайты'?",
+        answer:
+          "В разделе 'Инсайты' появляются важные советы и напоминания, основанные на ваших финансовых действиях. Если появляется горящий значок — обязательно ознакомьтесь с новыми подсказками.",
+      },
+      {
+        question: "Зачем нужны еженедельные уведомления?",
+        answer:
+          "Они поддерживают дисциплину — так вы получаете своевременный анализ бюджета и не пропустите перекосы трат или возможностей для накоплений.",
+      }
+    ],
+  }
 ];
 
-const faqAnswers: { [key: string]: string } = {
-    "Как составить бюджет?": "Для составления бюджета следуйте правилу 50/30/20: 50% на необходимые расходы (жилье, еда, транспорт), 30% на желания (развлечения, рестораны), 20% на сбережения и погашение долгов. Ведите учет доходов и расходов, планируйте крупные покупки заранее.",
-    "Как уменьшить налоги?": "Используйте налоговые вычеты: стандартные, социальные (лечение, образование, благотворительность), имущественные (покупка жилья). Откройте ИИС для инвестиционного вычета. Ведите документооборот для подтверждения расходов.",
-    "Какие есть способы накопления?": "Основные способы: банковские вклады (низкий риск, невысокая доходность), облигации (средний риск и доходность), акции (высокий риск, потенциально высокая доходность), недвижимость, драгоценные металлы. Диверсифицируйте портфель.",
-    "Расскажи про инвестиции для новичков": "Начните с изучения основ: облигации федерального займа (ОФЗ) - самый безопасный инструмент, ETF на широкий рынок для диверсификации, постепенно изучайте отдельные акции. Инвестируйте регулярно небольшими суммами, не вкладывайте все сбережения сразу."
-};
-
-const GEMINI_API_KEY = "AIzaSyA9yfr1qm-LGmujIFifZwZ0JsQ3a3D9c8I";
-
-// Используем актуальный endpoint Gemini API v1beta и модель gemini-1.5-flash
-const GEMINI_MODEL = "gemini-1.5-flash"; // можно заменить на "gemini-1.5-pro" при необходимости
-
-const callGemini = async (question: string): Promise<string> => {
-    try {
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        role: "user",
-                        parts: [{ text: question }]
-                    }]
-                }),
-            }
-        );
-
-        if (!response.ok) {
-            // Попробуем вытащить ошибку из тела ответа
-            let errorText = '';
-            try {
-                const errData = await response.json();
-                errorText = errData?.error?.message || JSON.stringify(errData);
-            } catch {
-                errorText = await response.text();
-            }
-            throw new Error(`Gemini API error: ${response.status}: ${errorText}`);
-        }
-
-        const data = await response.json();
-        // Проверяем структуру ответа для новой модели Gemini
-        if (
-            data &&
-            Array.isArray(data.candidates) &&
-            data.candidates[0]?.content?.parts &&
-            data.candidates[0].content.parts[0]?.text
-        ) {
-            return data.candidates[0].content.parts[0].text;
-        }
-        return "Ответ не получен от Gemini. Проверьте корректность ключа API и модели.";
-    } catch (error: any) {
-        console.error("Ошибка обращения к Gemini API:", error);
-        return `Извините, произошла ошибка при обращении к Gemini AI: ${error.message || error}. Попробуйте позже.`;
-    }
-};
-
+// Состояния: выбранная категория, выбранный вопрос
 const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void; }) => {
-    const [messages, setMessages] = useState<Message[]>([
-        { text: "Здравствуйте! Я ваш финансовый помощник. Чем могу помочь?", isUser: false }
-    ]);
-    const [input, setInput] = useState('');
-    const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
+    { text: "👋 Привет! Вместо чата выберите интересующий вас аналитический вопрос — и сразу получите подробный ответ.", isUser: false },
+  ]);
+  const [selectedCategory, setSelectedCategory] = useState<null | string>(null);
+  const [selectedQuestionIdx, setSelectedQuestionIdx] = useState<null | number>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+  const reset = () => {
+    setSelectedCategory(null);
+    setSelectedQuestionIdx(null);
+  };
 
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages, isWaitingForResponse]);
+  // Отображаем список категорий или конкретный вопрос
+  const category = analyticsQa.find((cat) => cat.category === selectedCategory);
 
-    const handleSendMessage = async (text: string) => {
-        if (!text.trim()) return;
-
-        const userMessage: Message = { text, isUser: true };
-        setMessages(prev => [...prev, userMessage]);
-        setInput('');
-        setIsWaitingForResponse(true);
-
-        // Check if it's a FAQ question
-        if (faqAnswers[text]) {
-            setTimeout(() => {
-                const botMessage: Message = { text: faqAnswers[text], isUser: false };
-                setMessages(prev => [...prev, botMessage]);
-                setIsWaitingForResponse(false);
-            }, 1000);
-        } else {
-            // Use Gemini instead of OpenAI!
-            const response = await callGemini(text);
-            const botMessage: Message = { text: response, isUser: false };
-            setMessages(prev => [...prev, botMessage]);
-            setIsWaitingForResponse(false);
-        }
-    };
-
-    return (
-        <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DrawerContent className="h-[90vh] flex flex-col" onOpenAutoFocus={(e) => e.preventDefault()}>
-                <DrawerHeader className="text-left flex-shrink-0">
-                    <div className="flex justify-between items-center">
-                        <DrawerTitle>Финансовый помощник</DrawerTitle>
-                        <DrawerClose asChild>
-                            <Button variant="ghost" size="icon" onClick={onClose}>
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </DrawerClose>
-                    </div>
-                    <DrawerDescription>Задайте любой вопрос о финансах. Я постараюсь помочь.</DrawerDescription>
-                </DrawerHeader>
-
-                <ScrollArea className="flex-grow px-4">
-                    <div className="space-y-2">
-                        {messages.map((msg, index) => (
-                            <ChatMessage key={index} message={msg.text} isUser={msg.isUser} />
-                        ))}
-                        {isWaitingForResponse && <ChatMessage message="..." isUser={false} isLoading={true} />}
-                        <div ref={messagesEndRef} />
-                    </div>
-                </ScrollArea>
-                
-                <div className="p-4 border-t flex-shrink-0">
-                    <p className="text-sm font-medium mb-2">Часто задаваемые вопросы:</p>
-                    <div className="flex flex-wrap gap-2">
-                        {faqs.map((faq, index) => (
-                            <Button key={index} variant="outline" size="sm" onClick={() => handleSendMessage(faq)} disabled={isWaitingForResponse}>
-                                {faq}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-
-                <DrawerFooter className="flex-shrink-0">
-                    <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(input); }} className="flex gap-2">
-                        <Input 
-                            placeholder="Напишите ваш вопрос..."
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            disabled={isWaitingForResponse}
-                        />
-                        <Button type="submit" size="icon" disabled={isWaitingForResponse || !input.trim()}>
-                            <Send className="h-4 w-4" />
-                        </Button>
-                    </form>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
+  // Если выбрали вопрос — показываем ответ и кнопки 'ещё вопросы этой категории' / 'назад к категориям'
+  let currentNode;
+  if (!selectedCategory) {
+    currentNode = (
+      <div>
+        <div className="mb-4 text-base font-semibold">Выберите тему:</div>
+        <div className="flex flex-wrap gap-2">
+          {analyticsQa.map((cat, i) => (
+            <Button
+              key={cat.category}
+              variant="outline"
+              onClick={() => {
+                setSelectedCategory(cat.category);
+                setSelectedQuestionIdx(null);
+              }}
+              className="mb-2"
+            >
+              {cat.category}
+            </Button>
+          ))}
+        </div>
+      </div>
     );
+  } else if (selectedCategory && selectedQuestionIdx === null && category) {
+    currentNode = (
+      <div>
+        <div className="mb-2 font-semibold">Вопросы по теме: {selectedCategory}</div>
+        <div className="space-y-2">
+          {category.questions.map((q, idx) => (
+            <Button
+              key={q.question}
+              variant="ghost"
+              onClick={() => setSelectedQuestionIdx(idx)}
+              className="w-full justify-start whitespace-normal"
+            >
+              {q.question}
+            </Button>
+          ))}
+        </div>
+        <Button variant="outline" onClick={reset} className="mt-4">← Назад к выбору тем</Button>
+      </div>
+    );
+  } else if (selectedCategory && selectedQuestionIdx !== null && category) {
+    const qobj = category.questions[selectedQuestionIdx];
+    currentNode = (
+      <div>
+        <div className="mb-1 text-xs text-muted-foreground">Тема: {selectedCategory}</div>
+        <div className="mb-2 font-bold">{qobj.question}</div>
+        <div className="bg-muted rounded-xl p-3 mb-4 text-base">{qobj.answer}</div>
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            variant="secondary"
+            onClick={() => setSelectedQuestionIdx(null)}
+            className="whitespace-nowrap"
+          >← К вопросам по теме</Button>
+          <Button
+            variant="outline"
+            onClick={reset}
+            className="whitespace-nowrap"
+          >← К категориям</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DrawerContent className="h-[90vh] flex flex-col" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <DrawerHeader className="text-left flex-shrink-0">
+          <div className="flex justify-between items-center">
+            <DrawerTitle>Финансовая аналитика</DrawerTitle>
+            <DrawerClose asChild>
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </DrawerClose>
+          </div>
+          <DrawerDescription>
+            Пользуйтесь готовыми ответами на самые важные вопросы по вашему бюджету, целям и аналитике!
+          </DrawerDescription>
+        </DrawerHeader>
+
+        <ScrollArea className="flex-grow px-4">
+          <div className="space-y-2">
+            {messages.map((msg, idx) => (
+              <ChatMessage key={idx} message={msg.text} isUser={msg.isUser} />
+            ))}
+            <div className="my-6">
+              {currentNode}
+            </div>
+          </div>
+        </ScrollArea>
+        <DrawerFooter className="flex-shrink-0" />
+      </DrawerContent>
+    </Drawer>
+  );
 };
 
 export default ChatWindow;
