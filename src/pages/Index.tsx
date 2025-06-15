@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import TabButton from '@/components/ui/TabButton';
 import ChatBubble from '@/components/ChatBubble';
@@ -8,6 +9,8 @@ import SocialPage from './SocialPage';
 import BudgetPage from './BudgetPage';
 import { Toaster } from "@/components/ui/sonner";
 import ChatWindow from '@/components/ChatWindow';
+
+const ONBOARDING_STORAGE_KEY = "onboarding_passed";
 
 const tabs = [
   { id: 'home', label: 'Главная', icon: '🏠', component: HomePage },
@@ -20,13 +23,26 @@ const tabs = [
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [isChatOpen, setIsChatOpen] = useState(false);
-  
-  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || HomePage;
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Scroll to top on tab change
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" }); // без анимации
+    const passed = localStorage.getItem(ONBOARDING_STORAGE_KEY);
+    if (!passed) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [activeTab]);
+
+  if (showOnboarding) {
+    // лениво импортируем чтобы избежать проблем с циклическим импортом
+    const OnboardingPage = require('./OnboardingPage').default;
+    return <OnboardingPage />;
+  }
+
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || HomePage;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
