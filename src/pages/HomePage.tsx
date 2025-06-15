@@ -1,4 +1,3 @@
-
 import { BarChart, Bar, XAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, LineChart, Line } from "recharts";
 import {
   Card,
@@ -75,77 +74,77 @@ export default function HomePage() {
             )}
           >
             <div className={cn(
-              "rounded-full border-4 border-orange-300 p-1 shadow-md mb-1",
+              "rounded-full border-4 border-cyber-purple p-1 shadow-md mb-1",
               s.color,
               "w-14 h-14 flex items-center justify-center text-3xl"
             )}>
               <span>{s.emoji}</span>
             </div>
-            <span className="text-xs text-orange-600 font-medium">{s.title}</span>
+            <span className="text-xs text-cyber-purple font-medium">{s.title}</span>
           </div>
         ))}
       </div>
       {/* Дашборд карточки с метриками */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-0 mb-2">
-        <Card className="border-0 bg-gradient-to-br from-orange-400 via-yellow-200 to-white shadow-md">
+        <Card className="border-0 bg-gradient-to-br from-cyber-purple via-electric-blue to-white shadow-md">
           <CardHeader>
-            <CardTitle className="text-orange-800">Доход</CardTitle>
+            <CardTitle className="text-cyber-purple">Доход</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold text-orange-700">{dashboardMetrics.income.toLocaleString()}₽</div>
+            <div className="text-2xl font-extrabold text-cyber-purple">{dashboardMetrics.income.toLocaleString()}₽</div>
             <div className={cn(
               "flex items-center text-sm mt-1",
-              incomeDelta.up ? "text-green-700" : "text-red-600"
+              incomeDelta.up ? "text-money-green" : "text-sunset-orange"
             )}>
               {incomeDelta.up ? "▲" : "▼"} {incomeDelta.percent}%
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 bg-gradient-to-br from-orange-200 via-yellow-50 to-white shadow-md">
+        <Card className="border-0 bg-gradient-to-br from-electric-blue via-neon-pink to-white shadow-md">
           <CardHeader>
-            <CardTitle className="text-orange-600">Расходы</CardTitle>
+            <CardTitle className="text-electric-blue">Расходы</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold text-orange-500">{dashboardMetrics.expenses.toLocaleString()}₽</div>
+            <div className="text-2xl font-extrabold text-electric-blue">{dashboardMetrics.expenses.toLocaleString()}₽</div>
             <div className={cn(
               "flex items-center text-sm mt-1",
-              expensesDelta.up ? "text-red-600" : "text-green-700"
+              expensesDelta.up ? "text-sunset-orange" : "text-money-green"
             )}>
               {expensesDelta.up ? "▲" : "▼"} {expensesDelta.percent}%
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 bg-gradient-to-br from-yellow-400 via-orange-100 to-white shadow-md">
+        <Card className="border-0 bg-gradient-to-br from-money-green via-cyber-purple to-white shadow-md">
           <CardHeader>
-            <CardTitle className="text-yellow-700">Сбережения</CardTitle>
+            <CardTitle className="text-money-green">Сбережения</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold text-yellow-700">{dashboardMetrics.savings.toLocaleString()}₽</div>
-            <div className="text-sm mt-1 text-yellow-800">{dashboardMetrics.savingsPercent}% от дохода</div>
+            <div className="text-2xl font-extrabold text-money-green">{dashboardMetrics.savings.toLocaleString()}₽</div>
+            <div className="text-sm mt-1 text-cyber-purple">{dashboardMetrics.savingsPercent}% от дохода</div>
           </CardContent>
         </Card>
       </div>
       {/* Прогресс до цели */}
-      <Card className="border-orange-200 shadow bg-white">
+      <Card className="border-cyber-purple shadow bg-white">
         <CardHeader>
-          <CardTitle className="text-orange-700 font-bold">Прогресс к финансовой цели</CardTitle>
+          <CardTitle className="text-cyber-purple font-bold">Прогресс к финансовой цели</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-3 mb-2">
-            <Progress value={progressValue} className="w-full h-3 bg-yellow-100 progress-bar-orange" />
-            <span className="ml-2 font-semibold text-orange-700">{progressValue}%</span>
+            <Progress value={progressValue} className="w-full h-3 bg-cyber-purple/10 progress-bar-cyber" />
+            <span className="ml-2 font-semibold text-cyber-purple">{progressValue}%</span>
           </div>
-          <div className="text-xs text-orange-500">Цель: {monthlyGoal.toLocaleString()}₽</div>
+          <div className="text-xs text-cyber-purple">Цель: {monthlyGoal.toLocaleString()}₽</div>
         </CardContent>
       </Card>
       {/* График бюджета с выбором типа */}
       <div className="flex justify-center mb-2">
-        <div className="inline-flex bg-orange-100 rounded-lg p-1 gap-2 shadow">
+        <div className="inline-flex bg-cyber-purple/10 rounded-lg p-1 gap-2 shadow">
           <button
             className={`px-4 py-1 rounded-lg text-sm font-semibold transition ${
               chartType === "bar"
-                ? "bg-orange-400 text-white shadow"
-                : "hover:bg-orange-200"
+                ? "bg-cyber-purple text-white shadow"
+                : "hover:bg-cyber-purple/30"
             }`}
             onClick={() => setChartType("bar")}
           >
@@ -154,8 +153,8 @@ export default function HomePage() {
           <button
             className={`px-4 py-1 rounded-lg text-sm font-semibold transition ${
               chartType === "line"
-                ? "bg-orange-400 text-white shadow"
-                : "hover:bg-orange-200"
+                ? "bg-cyber-purple text-white shadow"
+                : "hover:bg-cyber-purple/30"
             }`}
             onClick={() => setChartType("line")}
           >
@@ -163,7 +162,7 @@ export default function HomePage() {
           </button>
         </div>
       </div>
-      <Card className="border-orange-200 shadow animate-scale-in mb-2">
+      <Card className="border-cyber-purple shadow animate-scale-in mb-2">
         <CardHeader>
           <CardTitle>График бюджета</CardTitle>
           <CardDescription>Сравнение доходов и расходов за последние 3 месяца</CardDescription>
@@ -173,41 +172,41 @@ export default function HomePage() {
             <ResponsiveContainer width="100%" height="100%">
               {chartType === "bar" ? (
                 <BarChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid vertical={false} stroke="#fde68a" />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#e58817" fontSize={14} />
+                  <CartesianGrid vertical={false} stroke="#a084ea" />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#b470f3" fontSize={14} />
                   <Tooltip
-                    cursor={{ fill: "#fde68a44" }}
+                    cursor={{ fill: "#ccd7f444" }}
                     formatter={(val: number) => `${val?.toLocaleString()}₽`}
                   />
                   <Legend
                     wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
                     iconType="circle"
                     payload={[
-                      { value: "Доходы", type: "circle", color: "#FFA726" },
-                      { value: "Расходы", type: "circle", color: "#FB923C" }
+                      { value: "Доходы", type: "circle", color: "#9B59B6" },
+                      { value: "Расходы", type: "circle", color: "#00D4FF" }
                     ]}
                   />
-                  <Bar dataKey="expenses" name="Расходы" fill="#FB923C" radius={7} barSize={28} />
-                  <Bar dataKey="income" name="Доходы" fill="#FFA726" radius={7} barSize={28} />
+                  <Bar dataKey="expenses" name="Расходы" fill="#00D4FF" radius={7} barSize={28} />
+                  <Bar dataKey="income" name="Доходы" fill="#9B59B6" radius={7} barSize={28} />
                 </BarChart>
               ) : (
                 <LineChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                  <CartesianGrid stroke="#fde68a" vertical={false} />
-                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#e58817" fontSize={14} />
+                  <CartesianGrid stroke="#a084ea" vertical={false} />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#b470f3" fontSize={14} />
                   <Tooltip
-                    cursor={{ stroke: "#FFA726", strokeWidth: 2, opacity: 0.25 }}
+                    cursor={{ stroke: "#9B59B6", strokeWidth: 2, opacity: 0.25 }}
                     formatter={(val: number) => `${val?.toLocaleString()}₽`}
                   />
                   <Legend
                     wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
                     iconType="circle"
                     payload={[
-                      { value: "Доходы", type: "circle", color: "#FFA726" },
-                      { value: "Расходы", type: "circle", color: "#FB923C" }
+                      { value: "Доходы", type: "circle", color: "#9B59B6" },
+                      { value: "Расходы", type: "circle", color: "#00D4FF" }
                     ]}
                   />
-                  <Line type="monotone" dataKey="income" name="Доходы" stroke="#FFA726" strokeWidth={3} dot={{ r: 6 }} />
-                  <Line type="monotone" dataKey="expenses" name="Расходы" stroke="#FB923C" strokeWidth={3} dot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="income" name="Доходы" stroke="#9B59B6" strokeWidth={3} dot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="expenses" name="Расходы" stroke="#00D4FF" strokeWidth={3} dot={{ r: 6 }} />
                 </LineChart>
               )}
             </ResponsiveContainer>
@@ -215,9 +214,9 @@ export default function HomePage() {
         </CardContent>
       </Card>
       {/* Совет эксперта — внизу */}
-      <Card className="mx-auto w-full max-w-lg bg-orange-50 border-orange-200 shadow-md">
+      <Card className="mx-auto w-full max-w-lg bg-cyber-purple/10 border-cyber-purple shadow-md">
         <CardContent className="flex items-center gap-2 py-3">
-          <Info className="text-orange-400" size={22} />
+          <Info className="text-cyber-purple" size={22} />
           <span className="font-medium">{mainAdvice}</span>
         </CardContent>
       </Card>
