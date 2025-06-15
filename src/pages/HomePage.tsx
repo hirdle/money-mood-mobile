@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { BarChart, Bar, XAxis, CartesianGrid, ResponsiveContainer, Tooltip, Legend, LineChart, Line } from "recharts";
 import {
   Card,
   CardContent,
@@ -56,13 +56,16 @@ const HomePage = () => {
   // Для выбора типа графика
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
 
+  // Используем первый совет как основной
+  const mainAdvice = financialAdvice[0];
+
   return (
     <div className="p-2 sm:p-6 flex flex-col gap-7 max-w-2xl mx-auto">
       {/* Совет эксперта */}
       <Card className="mx-auto w-full max-w-lg bg-cyber-purple/10 border-cyber-purple/20 shadow-md">
         <CardContent className="flex items-center gap-2 py-3">
           <Info className="text-cyber-purple" size={22} />
-          <span className="font-medium">{tip}</span>
+          <span className="font-medium">{mainAdvice}</span>
         </CardContent>
       </Card>
 
