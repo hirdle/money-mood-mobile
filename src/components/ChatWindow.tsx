@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -199,7 +198,7 @@ const ChatWindow = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
                   {categories.map((cat) => (
                     <Button
                       key={cat.category}
-                      className="w-full !bg-orange-400 !text-white !rounded-xl font-bold shadow hover:scale-105 transition flex justify-between items-center"
+                      className="w-full !bg-orange-400 !text-white !rounded-xl font-bold shadow flex justify-between items-center"
                       onClick={() => {
                         setSelectedCategory(cat.category);
                         setShowExtra(false);

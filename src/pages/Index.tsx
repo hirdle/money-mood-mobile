@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TabButton from '@/components/ui/TabButton';
 import ChatBubble from '@/components/ChatBubble';
 import HomePage from './HomePage';
@@ -23,6 +22,11 @@ const Index = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || HomePage;
+
+  // Scroll to top on tab change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" }); // без анимации
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
