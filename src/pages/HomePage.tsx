@@ -10,7 +10,7 @@ import { TrendingUp, TrendingDown, CircleDollarSign, Info, Goal } from "lucide-r
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 // Современные бюджетные данные — СИНХРОНИЗИРОВАНЫ с цифрами на BudgetPage!
 const budgetData = [
@@ -53,36 +53,11 @@ const financialAdvice = [
 ];
 
 const HomePage = () => {
-  const tip = useMemo(() => financialAdvice[Math.floor(Math.random() * financialAdvice.length)], []);
+  // Для выбора типа графика
+  const [chartType, setChartType] = useState<"bar" | "line">("bar");
 
   return (
     <div className="p-2 sm:p-6 flex flex-col gap-7 max-w-2xl mx-auto">
-      {/* Супер заметный баланс/шапка */}
-      <div className="w-full bg-gradient-to-br from-cyber-purple via-sky-200/80 to-emerald-100 shadow-xl rounded-3xl p-6 relative overflow-hidden flex flex-col gap-2 animate-fade-in">
-        <div className="flex items-center gap-3 mb-2">
-          <CircleDollarSign size={32} className="text-cyber-purple drop-shadow" />
-          <div className="flex-1">
-            <span className="uppercase tracking-wide text-xs text-cyber-purple/70">Общий баланс</span>
-            <div className="text-3xl font-bold text-cyber-purple drop-shadow-sm">{dashboardMetrics.savings.toLocaleString()}₽</div>
-          </div>
-        </div>
-        <div className="flex gap-3 text-xs text-muted-foreground">
-          <div>
-            Доход: <span className="text-green-500 font-semibold">{dashboardMetrics.income.toLocaleString()}₽</span>
-          </div>
-          <div>
-            Расход: <span className="text-red-500 font-semibold">{dashboardMetrics.expenses.toLocaleString()}₽</span>
-          </div>
-        </div>
-        <Progress value={progressValue} className="mt-4 h-2 bg-emerald-100" />
-        <div className="flex items-center mt-2 gap-3 text-sm">
-          <Goal className="text-emerald-400" size={18} />
-          Прогресс к цели: <span className="font-semibold">{progressValue}%</span>
-          <span className="ml-auto text-xs text-cyber-purple/70">Цель: {monthlyGoal.toLocaleString()}₽</span>
-        </div>
-        <div className="absolute right-3 top-2 opacity-30 text-cyber-purple text-8xl pointer-events-none select-none">🏦</div>
-      </div>
-
       {/* Совет эксперта */}
       <Card className="mx-auto w-full max-w-lg bg-cyber-purple/10 border-cyber-purple/20 shadow-md">
         <CardContent className="flex items-center gap-2 py-3">
@@ -166,33 +141,79 @@ const HomePage = () => {
         </Button>
       </div>
 
-      {/* График бюджета — синхронизирован с BudgetPage */}
+      {/* Новый низ: График бюджета с возможностью выбора */}
+      <div className="flex justify-center mb-4">
+        <div className="inline-flex bg-muted rounded-lg p-1 gap-2 shadow">
+          <button
+            className={`px-4 py-1 rounded-lg text-sm font-semibold transition ${
+              chartType === "bar"
+                ? "bg-cyber-purple text-white shadow"
+                : "hover:bg-cyber-purple/10"
+            }`}
+            onClick={() => setChartType("bar")}
+          >
+            Столбики
+          </button>
+          <button
+            className={`px-4 py-1 rounded-lg text-sm font-semibold transition ${
+              chartType === "line"
+                ? "bg-cyber-purple text-white shadow"
+                : "hover:bg-cyber-purple/10"
+            }`}
+            onClick={() => setChartType("line")}
+          >
+            Линии
+          </button>
+        </div>
+      </div>
+
       <Card className="border-cyber-purple/20">
         <CardHeader>
           <CardTitle>График бюджета</CardTitle>
           <CardDescription>Сравнение доходов и расходов за последние 3 месяца</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[240px] w-full">
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid vertical={false} stroke="#eee" />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#999" fontSize={14} />
-                <Tooltip
-                  cursor={{ fill: "#e0e7ef33" }}
-                  formatter={(val: number) => `${val?.toLocaleString()}₽`}
-                />
-                <Legend
-                  wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
-                  iconType="circle"
-                  payload={[
-                    { value: "Доходы", type: "circle", color: "#34d399" },
-                    { value: "Расходы", type: "circle", color: "#ef4444" }
-                  ]}
-                />
-                <Bar dataKey="expenses" name="Расходы" fill="#ef4444" radius={7} barSize={28} />
-                <Bar dataKey="income" name="Доходы" fill="#34d399" radius={7} barSize={28} />
-              </BarChart>
+              {chartType === "bar" ? (
+                <BarChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid vertical={false} stroke="#eee" />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#999" fontSize={14} />
+                  <Tooltip
+                    cursor={{ fill: "#e0e7ef33" }}
+                    formatter={(val: number) => `${val?.toLocaleString()}₽`}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
+                    iconType="circle"
+                    payload={[
+                      { value: "Доходы", type: "circle", color: "#34d399" },
+                      { value: "Расходы", type: "circle", color: "#ef4444" }
+                    ]}
+                  />
+                  <Bar dataKey="expenses" name="Расходы" fill="#ef4444" radius={7} barSize={28} />
+                  <Bar dataKey="income" name="Доходы" fill="#34d399" radius={7} barSize={28} />
+                </BarChart>
+              ) : (
+                <LineChart data={budgetData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid stroke="#eee" vertical={false} />
+                  <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="#999" fontSize={14} />
+                  <Tooltip
+                    cursor={{ stroke: "#6366f1", strokeWidth: 2, opacity: 0.2 }}
+                    formatter={(val: number) => `${val?.toLocaleString()}₽`}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: 5, fontSize: 13 }}
+                    iconType="circle"
+                    payload={[
+                      { value: "Доходы", type: "circle", color: "#34d399" },
+                      { value: "Расходы", type: "circle", color: "#ef4444" }
+                    ]}
+                  />
+                  <Line type="monotone" dataKey="income" name="Доходы" stroke="#34d399" strokeWidth={3} dot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="expenses" name="Расходы" stroke="#ef4444" strokeWidth={3} dot={{ r: 6 }} />
+                </LineChart>
+              )}
             </ResponsiveContainer>
           </div>
         </CardContent>
