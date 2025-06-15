@@ -57,18 +57,16 @@ const HomePage = () => {
   // Для выбора типа графика
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
 
-  // Используем первый совет как основной
+  // Используем первый совет
   const mainAdvice = financialAdvice[0];
 
   return (
     <div className="p-2 sm:p-6 flex flex-col gap-7 max-w-2xl mx-auto">
-      {/* Совет эксперта */}
-      <Card className="mx-auto w-full max-w-lg bg-gradient-to-r from-indigo-300 via-purple-200 to-indigo-50 border-indigo-200/60 shadow-md">
-        <CardContent className="flex items-center gap-2 py-3">
-          <Info className="text-indigo-500" size={22} />
-          <span className="font-medium text-indigo-700">{mainAdvice}</span>
-        </CardContent>
-      </Card>
+      {/* Заголовок и подпись дашборда СВЕРХУ */}
+      <div className="text-center space-y-2 mt-2 mb-2">
+        <h1 className="text-2xl font-bold text-indigo-600 text-glow">Главная страница</h1>
+        <p className="text-sm text-muted-foreground">Ваш финансовый дашборд</p>
+      </div>
 
       {/* Витрина метрик */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -134,6 +132,14 @@ const HomePage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Совет — теперь расположен сразу после метрик */}
+      <Card className="mx-auto w-full max-w-lg bg-indigo-50 border-indigo-200/70 shadow-sm">
+        <CardContent className="flex items-center gap-2 py-3 px-4">
+          <Info className="text-indigo-500" size={22} />
+          <span className="font-medium text-indigo-700">{mainAdvice}</span>
+        </CardContent>
+      </Card>
 
       {/* График с переключателями */}
       <div className="flex justify-center mb-4">
@@ -211,13 +217,9 @@ const HomePage = () => {
           </div>
         </CardContent>
       </Card>
-      {/* Надпись перенесена вниз */}
-      <div className="text-center space-y-2 mt-2">
-        <h1 className="text-2xl font-bold text-indigo-600 text-glow">Главная страница</h1>
-        <p className="text-sm text-muted-foreground">Ваш финансовый дашборд</p>
-      </div>
     </div>
   );
 };
 
 export default HomePage;
+
