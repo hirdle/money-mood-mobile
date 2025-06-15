@@ -48,6 +48,19 @@ const sharedPurchases = [
   { item: "Совместный подарок", amount: 8500, friends: "Друзья" },
 ];
 
+const categoryInsights = {
+  "Еда и продукты": "Не забывайте пользоваться скидками и планировать меню заранее.",
+  "Транспорт": "Используйте транспортные абонементы для снижения трат.",
+  "ЖКХ": "Своевременная оплата услуг помогает избежать пеней.",
+  "Связь и интернет": "Проверьте — подходит ли вам текущий тариф?",
+  "Развлечения": "Сравнивайте цены на разные форматы досуга.",
+  "Одежда и покупки": "Пользуйтесь распродажами и кэшбэками в приложениях.",
+  "Совместные покупки с друзьями": "Общая покупка часто выгоднее по акции.",
+  "Крупные покупки": "Проверьте актуальные скидки или варианты рассрочки.",
+  "Налоги": "Проверьте, есть ли для вас возможные налоговые вычеты.",
+  "ОСАГО/Штрафы": "Страхуйте авто вовремя — штрафы не заставят себя ждать!",
+};
+
 const BudgetPage = () => {
   const currentMonth = budgetData[budgetData.length - 1];
   const savings = currentMonth.income - currentMonth.expenses;
@@ -253,6 +266,7 @@ const BudgetPage = () => {
               <TableRow>
                 <TableHead>Категория</TableHead>
                 <TableHead className="text-right">Сумма в месяц</TableHead>
+                <TableHead className="text-right">Совет/инсайт</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -260,6 +274,9 @@ const BudgetPage = () => {
                 <TableRow key={item.category}>
                   <TableCell>{item.category}</TableCell>
                   <TableCell className="text-right font-medium">{item.amount.toLocaleString()}₽</TableCell>
+                  <TableCell className="text-right text-xs text-muted-foreground">
+                    {categoryInsights[item.category] || ""}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
