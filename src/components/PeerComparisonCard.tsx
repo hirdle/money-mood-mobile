@@ -1,3 +1,4 @@
+
 import { PeerComparison } from '@/types/financial';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,10 +13,13 @@ const PeerComparisonCard = ({ comparison }: PeerComparisonCardProps) => {
 
   // Повелительная форма для кнопок
   let buttonText = '';
+  let buttonColorClass = '';
   if (isSpendingMore) {
     buttonText = 'Ограничь!';
+    buttonColorClass = 'bg-[#FF4757]'; // красный
   } else {
     buttonText = 'Продолжай!';
+    buttonColorClass = 'bg-[#11AB0B]'; // зеленый
   }
 
   return (
@@ -48,11 +52,8 @@ const PeerComparisonCard = ({ comparison }: PeerComparisonCardProps) => {
       </div>
       <Button
         size="sm"
-        className={`w-full font-bold rounded-xl shadow hover:scale-105 transition-transform
-          ${isSpendingMore
-            ? "bg-gradient-to-r from-sunset-orange via-warning-yellow to-sunset-orange text-white"
-            : "bg-gradient-to-r from-warning-yellow via-sunset-orange to-warning-yellow text-yellow-900"
-          } border-none`}
+        className={`w-full font-bold rounded-xl shadow hover:scale-105 transition-transform 
+          ${buttonColorClass} text-white border-none`}
       >
         {buttonText}
       </Button>
